@@ -37,15 +37,26 @@ class MyFrame1 : public wxFrame
 
 	protected:
 		wxStaticText* staticText_title;
-		wxPanel* m_panel2;
-		wxChoice* m_choice1;
+		wxPanel* drawPanel;
+		wxChoice* m_choice_SortType;
 		wxStaticText* m_staticText2;
-		wxSlider* m_slider2;
-		wxButton* m_button18;
-		wxButton* m_button19;
-		wxButton* m_button20;
-		wxButton* m_button21;
-		wxButton* m_button22;
+		wxSlider* m_slider_Num_of_Elem;
+		wxButton* m_button_Sort;
+		wxButton* m_button_Shuffle;
+		wxButton* m_button_Pause;
+		wxButton* m_button_Stop;
+		wxButton* m_button_Reset;
+
+		// Virtual event handlers, override them in your derived class
+		virtual void drawPanelOnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
+		virtual void m_choice_SortTypeOnChoice( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event ) { event.Skip(); }
+		virtual void m_button_SortOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_ShuffleOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_PauseOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_StopOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_ResetOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+
 
 	public:
 

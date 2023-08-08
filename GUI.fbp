@@ -191,7 +191,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_panel2</property>
+                                        <property name="name">drawPanel</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -260,7 +260,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_choice1</property>
+                                        <property name="name">m_choice_SortType</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -282,6 +282,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnChoice">m_choice_SortTypeOnChoice</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -377,16 +378,16 @@
                                         <property name="gripper">0</property>
                                         <property name="hidden">0</property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="maxValue">100</property>
+                                        <property name="maxValue">70</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
                                         <property name="maximum_size"></property>
-                                        <property name="minValue">0</property>
+                                        <property name="minValue">5</property>
                                         <property name="min_size"></property>
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_slider2</property>
+                                        <property name="name">m_slider_Num_of_Elem</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -404,10 +405,11 @@
                                         <property name="validator_style">wxFILTER_NONE</property>
                                         <property name="validator_type">wxDefaultValidator</property>
                                         <property name="validator_variable"></property>
-                                        <property name="value">50</property>
+                                        <property name="value">10</property>
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnScroll">m_slider_Num_of_ElemOnScroll</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -458,7 +460,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_button18</property>
+                                        <property name="name">m_button_Sort</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -481,6 +483,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnButtonClick">m_button_SortOnButtonClick</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -531,7 +534,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_button19</property>
+                                        <property name="name">m_button_Shuffle</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -554,6 +557,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnButtonClick">m_button_ShuffleOnButtonClick</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -604,7 +608,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_button20</property>
+                                        <property name="name">m_button_Pause</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -627,6 +631,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnButtonClick">m_button_PauseOnButtonClick</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -677,7 +682,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_button21</property>
+                                        <property name="name">m_button_Stop</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -700,6 +705,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnButtonClick">m_button_StopOnButtonClick</event>
                                     </object>
                                 </object>
                                 <object class="sizeritem" expanded="1">
@@ -750,7 +756,7 @@
                                         <property name="minimize_button">0</property>
                                         <property name="minimum_size"></property>
                                         <property name="moveable">1</property>
-                                        <property name="name">m_button22</property>
+                                        <property name="name">m_button_Reset</property>
                                         <property name="pane_border">1</property>
                                         <property name="pane_position"></property>
                                         <property name="pane_size"></property>
@@ -773,6 +779,7 @@
                                         <property name="window_extra_style"></property>
                                         <property name="window_name"></property>
                                         <property name="window_style"></property>
+                                        <event name="OnButtonClick">m_button_ResetOnButtonClick</event>
                                     </object>
                                 </object>
                             </object>
