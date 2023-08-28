@@ -32,10 +32,16 @@ class GUIMyFrame1 : public MyFrame1
 	//// end generated class members
 		void Draw();
 		void UpdateTabSize();
+		int GetShift(int); // return number of pixels from left side of the DrawPanel
 
 		std::vector<SortingElement> _tab;
-		int _tabSize;
 		int _maxElemValue;
+
+
+
+
+
+
 
 
 

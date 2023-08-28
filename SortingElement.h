@@ -1,10 +1,8 @@
 #pragma once
 #include <iostream>
 
-class SortingElement {
-	public:
+struct SortingElement {
 		SortingElement(int);
-	private:
 		int _value;
 		int r;
 		int g;
