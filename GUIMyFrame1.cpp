@@ -12,7 +12,11 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 void GUIMyFrame1::drawPanelOnUpdateUI(wxUpdateUIEvent& event)
 {
 	// TODO: Implement drawPanelOnUpdateUI
+	m_slider_Num_of_Elem->SetMax(drawPanel->GetSize().x);
+	_maxElemValue = _tab.size();
 	Draw();
+	std::string text = std::to_string(drawPanel->GetSize().x);
+	m_staticText2->SetLabel(text);
 }
 
 void GUIMyFrame1::m_choice_SortTypeOnChoice(wxCommandEvent& event)
@@ -25,8 +29,7 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 	// TODO: Implement m_slider_Num_of_ElemOnScroll
 	//_tabSize = m_slider_Num_of_Elem->GetValue();
 	UpdateTabSize();
-	//std::string text = std::to_string(_tab.size());
-	//m_staticText2->SetLabel(text);
+	
 
 	// IDEA! Max number of elements depending of screen width (num. of pixels)
 
@@ -35,6 +38,10 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
+	std::sort(_tab.begin(), _tab.end(), [&](SortingElement o1, const SortingElement& o2) {
+		Draw();
+		return o1<o2;
+	});
 }
 
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
