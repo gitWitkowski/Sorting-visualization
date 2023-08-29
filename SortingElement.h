@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
+//	sleep
+#include <chrono>
+#include <thread>
+//
 
-class SortingElement {
-	public:
+struct SortingElement {
 		SortingElement(int);
-	private:
+		bool operator<(const SortingElement&);
 		int _value;
 		int r;
 		int g;

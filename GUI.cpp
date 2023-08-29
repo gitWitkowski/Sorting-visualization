@@ -24,10 +24,10 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	staticText_title->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) );
 	staticText_title->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_INFOBK ) );
 
-	bSizer2->Add( staticText_title, 1, wxALIGN_CENTER|wxALL|wxEXPAND, 0 );
+	bSizer2->Add( staticText_title, 1, wxALIGN_CENTER|wxALL, 0 );
 
 
-	bSizer1->Add( bSizer2, 0, wxALIGN_CENTER|wxEXPAND, 5 );
+	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
@@ -56,8 +56,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticText2->Wrap( -1 );
 	bSizer5->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 10, 5, 70, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer5->Add( m_slider_Num_of_Elem, 0, wxALL, 5 );
+	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 10, 25, 600, wxDefaultPosition, wxSize( -1,300 ), wxSL_VALUE_LABEL|wxSL_VERTICAL );
+	bSizer5->Add( m_slider_Num_of_Elem, 0, wxALIGN_CENTER|wxALL, 5 );
 
 	m_button_Sort = new wxButton( this, wxID_ANY, wxT("Sort"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( m_button_Sort, 0, wxALIGN_CENTER|wxALL, 5 );
@@ -75,7 +75,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer5->Add( m_button_Reset, 0, wxALIGN_CENTER|wxALL, 5 );
 
 
-	bSizer3->Add( bSizer5, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	bSizer3->Add( bSizer5, 0, wxEXPAND, 5 );
 
 
 	bSizer1->Add( bSizer3, 1, wxEXPAND, 5 );
