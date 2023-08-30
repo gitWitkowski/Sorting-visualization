@@ -24,6 +24,7 @@ class GUIMyFrame1 : public MyFrame1
 {
 	protected:
 		// Handlers for MyFrame1 events.
+		void drawPanelOnSize(wxSizeEvent& event);
 		void drawPanelOnUpdateUI( wxUpdateUIEvent& event );
 		void m_choice_SortTypeOnChoice( wxCommandEvent& event );
 		void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event );

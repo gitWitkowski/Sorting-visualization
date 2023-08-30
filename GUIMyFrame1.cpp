@@ -6,47 +6,61 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 {
 	//m_slider_Num_of_Elem->SetValue(20);
 	UpdateTabSize();
-	//Draw();
+	Draw();
 }
+
+void GUIMyFrame1::drawPanelOnSize(wxSizeEvent& event)
+{
+	// TODO: Implement drawPanelOnSize
+	Draw();
+	_maxElemValue = _tab.size();
+	std::string text = std::to_string(drawPanel->GetSize().x);
+	m_staticText2->SetLabel(text);
+}
+
 
 void GUIMyFrame1::drawPanelOnUpdateUI(wxUpdateUIEvent& event)
 {
 	// TODO: Implement drawPanelOnUpdateUI
-	m_slider_Num_of_Elem->SetMax(drawPanel->GetSize().x);
-	_maxElemValue = _tab.size();
-	Draw();
-	std::string text = std::to_string(drawPanel->GetSize().x);
-	m_staticText2->SetLabel(text);
+	
 }
 
 void GUIMyFrame1::m_choice_SortTypeOnChoice(wxCommandEvent& event)
 {
 	// TODO: Implement m_choice_SortTypeOnChoice
+	
 }
 
 void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 {
 	// TODO: Implement m_slider_Num_of_ElemOnScroll
-	//_tabSize = m_slider_Num_of_Elem->GetValue();
+	_maxElemValue = _tab.size();
 	UpdateTabSize();
-	
-
-	// IDEA! Max number of elements depending of screen width (num. of pixels)
+	Draw();
 
 }
 
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
-	std::sort(_tab.begin(), _tab.end(), [&](SortingElement o1, const SortingElement& o2) {
+	std::sort(_tab.begin(), _tab.end(), [&](const SortingElement& o1, const SortingElement& o2) {
+		
+		o1._color = wxColor(255, 0, 0);
+		o2._color = wxColor(0, 255, 0);
+		
 		Draw();
 
-		std::chrono::milliseconds timespan(0); // or whatever
+		o1._color = wxColor(255, 255, 255);
+		o2._color = wxColor(255, 255, 255);
 
-		std::this_thread::sleep_for(timespan);
+		//std::chrono::milliseconds timespan(0); // or whatever
+
+		//std::this_thread::sleep_for(timespan);
 
 		return o1<o2;
 	});
+
+	Draw();
 }
 
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
@@ -54,6 +68,7 @@ void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
 	// TODO: Implement m_button_ShuffleOnButtonClick
 	_tab.clear();
 	UpdateTabSize();
+	Draw();
 }
 
 void GUIMyFrame1::m_button_PauseOnButtonClick(wxCommandEvent& event)

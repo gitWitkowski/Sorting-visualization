@@ -48,6 +48,7 @@ class MyFrame1 : public wxFrame
 		wxButton* m_button_Reset;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void drawPanelOnSize( wxSizeEvent& event ) { event.Skip(); }
 		virtual void drawPanelOnUpdateUI( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void m_choice_SortTypeOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event ) { event.Skip(); }

@@ -4,7 +4,7 @@ SortingElement::SortingElement(int value, wxColor color) : _value{ value }, _col
 
 SortingElement getNewRandomElement(int max) {
 	int val = (rand() % max) + 1;
-	SortingElement temp(val, wxColor(210, 102, 11));
+	SortingElement temp(val, wxColor(255, 255, 255));
 	return temp;
 }
 
