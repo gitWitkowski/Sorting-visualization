@@ -40,6 +40,11 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 	// TODO: Implement m_button_SortOnButtonClick
 	std::sort(_tab.begin(), _tab.end(), [&](SortingElement o1, const SortingElement& o2) {
 		Draw();
+
+		std::chrono::milliseconds timespan(0); // or whatever
+
+		std::this_thread::sleep_for(timespan);
+
 		return o1<o2;
 	});
 }
@@ -83,8 +88,13 @@ void GUIMyFrame1::Draw()
 
 	int shift = GetShift(w);
 
-
 	for (int i = 0; i < _tab.size(); i++) {
+		wxBrush tempBrush(_tab[i]._color);
+		wxPen tempPen(_tab[i]._color, 0);
+
+		dc.SetBrush(tempBrush);
+		dc.SetPen(tempPen);
+
 		dc.DrawRectangle(
 			wxRect(
 				shift + i * tempWidth, h - (unitHeight * _tab[i]._value) - 5,

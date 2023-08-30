@@ -1,17 +1,13 @@
 #pragma once
 #include <iostream>
-//	sleep
-#include <chrono>
-#include <thread>
-//
+#include <wx/colour.h>
 
 struct SortingElement {
-		SortingElement(int);
-		bool operator<(const SortingElement&);
+		SortingElement(int, wxColor);
 		int _value;
-		int r;
-		int g;
-		int b;
+		mutable wxColor _color;
 };
 
 SortingElement getNewRandomElement(int);
+
+bool operator<(const SortingElement&, const SortingElement&);
