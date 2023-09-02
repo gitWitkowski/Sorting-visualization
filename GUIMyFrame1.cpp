@@ -13,7 +13,6 @@ void GUIMyFrame1::drawPanelOnSize(wxSizeEvent& event)
 {
 	// TODO: Implement drawPanelOnSize
 	Draw();
-	_maxElemValue = _tab.size();
 	std::string text = std::to_string(drawPanel->GetSize().x);
 	m_staticText2->SetLabel(text);
 }
@@ -66,7 +65,6 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_ShuffleOnButtonClick
-	_tab.clear();
 	UpdateTabSize();
 	Draw();
 }
@@ -99,7 +97,7 @@ void GUIMyFrame1::Draw()
 	drawPanel->GetSize(&w, &h);
 
 	int tempWidth = w / _tab.size();
-	int unitHeight = h / _maxElemValue;
+	double unitHeight = (double)h / _maxElemValue;
 
 	int shift = GetShift(w);
 
@@ -120,16 +118,9 @@ void GUIMyFrame1::Draw()
 
 void GUIMyFrame1::UpdateTabSize()
 {
-	if (_tab.size() < m_slider_Num_of_Elem->GetValue()) {
-		int temp = m_slider_Num_of_Elem->GetValue() - _tab.size();
-		for (int i = 0; i < temp; i++)
-			_tab.push_back(getNewRandomElement(_maxElemValue));
-	}
-	else if (_tab.size() > m_slider_Num_of_Elem->GetValue()) {
-		int temp = _tab.size() - m_slider_Num_of_Elem->GetValue();
-		for (int i = 0; i < temp; i++)
-			_tab.pop_back();
-	}
+	_tab.clear();
+	for (int i = 0; i < m_slider_Num_of_Elem->GetValue(); i++)
+		_tab.push_back(getNewRandomElement(_maxElemValue));
 }
 
 int GUIMyFrame1::GetShift(int w) {
