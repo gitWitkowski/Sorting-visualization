@@ -97,7 +97,7 @@ void GUIMyFrame1::Draw()
 	drawPanel->GetSize(&w, &h);
 
 	int tempWidth = w / _tab.size();
-	double unitHeight = (double)h / _maxElemValue;
+	double unitHeight = static_cast<double>(h) / _maxElemValue;
 
 	int shift = GetShift(w);
 
@@ -110,8 +110,8 @@ void GUIMyFrame1::Draw()
 
 		dc.DrawRectangle(
 			wxRect(
-				shift + i * tempWidth, h - (unitHeight * _tab[i]._value) - 5,
-				tempWidth, unitHeight * _tab[i]._value
+				shift + i * tempWidth, h - static_cast<int>(unitHeight * _tab[i]._value),
+				tempWidth, static_cast<int>(unitHeight * _tab[i]._value)
 			));
 	}
 }
