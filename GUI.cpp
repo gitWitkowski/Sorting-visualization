@@ -87,8 +87,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	drawPanel->Connect( wxEVT_PAINT, wxPaintEventHandler( MyFrame1::drawPanelOnPaint ), NULL, this );
 	drawPanel->Connect( wxEVT_SIZE, wxSizeEventHandler( MyFrame1::drawPanelOnSize ), NULL, this );
-	drawPanel->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MyFrame1::drawPanelOnUpdateUI ), NULL, this );
 	m_choice_SortType->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame1::m_choice_SortTypeOnChoice ), NULL, this );
 	m_slider_Num_of_Elem->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_slider_Num_of_Elem->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
@@ -109,8 +109,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 MyFrame1::~MyFrame1()
 {
 	// Disconnect Events
+	drawPanel->Disconnect( wxEVT_PAINT, wxPaintEventHandler( MyFrame1::drawPanelOnPaint ), NULL, this );
 	drawPanel->Disconnect( wxEVT_SIZE, wxSizeEventHandler( MyFrame1::drawPanelOnSize ), NULL, this );
-	drawPanel->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MyFrame1::drawPanelOnUpdateUI ), NULL, this );
 	m_choice_SortType->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MyFrame1::m_choice_SortTypeOnChoice ), NULL, this );
 	m_slider_Num_of_Elem->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_slider_Num_of_Elem->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );

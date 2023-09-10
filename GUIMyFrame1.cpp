@@ -6,86 +6,19 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 {
 	//m_slider_Num_of_Elem->SetValue(20);
 	UpdateTabSize();
-	Draw();
+	drawPanel->Refresh(false);
 }
 
 void GUIMyFrame1::drawPanelOnSize(wxSizeEvent& event)
 {
 	// TODO: Implement drawPanelOnSize
-	Draw();
+	drawPanel->Refresh(false);
 	std::string text = std::to_string(drawPanel->GetSize().x);
 	m_staticText2->SetLabel(text);
 }
 
 
-void GUIMyFrame1::drawPanelOnUpdateUI(wxUpdateUIEvent& event)
-{
-	// TODO: Implement drawPanelOnUpdateUI
-	
-}
-
-void GUIMyFrame1::m_choice_SortTypeOnChoice(wxCommandEvent& event)
-{
-	// TODO: Implement m_choice_SortTypeOnChoice
-	
-}
-
-void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
-{
-	// TODO: Implement m_slider_Num_of_ElemOnScroll
-	_maxElemValue = _tab.size();
-	UpdateTabSize();
-	Draw();
-
-}
-
-void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_SortOnButtonClick
-	std::sort(_tab.begin(), _tab.end(), [&](const SortingElement& o1, const SortingElement& o2) {
-		
-		o1._color = wxColor(255, 0, 0);
-		o2._color = wxColor(0, 255, 0);
-		
-		Draw();
-
-		o1._color = wxColor(255, 255, 255);
-		o2._color = wxColor(255, 255, 255);
-
-		//std::chrono::milliseconds timespan(0); // or whatever
-
-		//std::this_thread::sleep_for(timespan);
-
-		return o1<o2;
-	});
-
-	Draw();
-}
-
-void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_ShuffleOnButtonClick
-	UpdateTabSize();
-	Draw();
-}
-
-void GUIMyFrame1::m_button_PauseOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_PauseOnButtonClick
-}
-
-void GUIMyFrame1::m_button_StopOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_StopOnButtonClick
-}
-
-void GUIMyFrame1::m_button_ResetOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_ResetOnButtonClick
-}
-
-
-void GUIMyFrame1::Draw()
+void GUIMyFrame1::drawPanelOnPaint(wxPaintEvent& event)
 {
 	wxClientDC dc1(drawPanel);
 	wxBufferedDC dc(&dc1);
@@ -116,6 +49,69 @@ void GUIMyFrame1::Draw()
 	}
 }
 
+void GUIMyFrame1::m_choice_SortTypeOnChoice(wxCommandEvent& event)
+{
+	// TODO: Implement m_choice_SortTypeOnChoice
+	
+}
+
+void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
+{
+	// TODO: Implement m_slider_Num_of_ElemOnScroll
+	_maxElemValue = _tab.size();
+	UpdateTabSize();
+	drawPanel->Refresh(false);
+
+}
+
+void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
+{
+	// TODO: Implement m_button_SortOnButtonClick
+	/*std::sort(_tab.begin(), _tab.end(), [&](const SortingElement& o1, const SortingElement& o2) {
+		
+		o1._color = wxColor(255, 0, 0);
+		o2._color = wxColor(0, 255, 0);
+		
+		drawPanel->Refresh(false);
+
+		o1._color = wxColor(255, 255, 255);
+		o2._color = wxColor(255, 255, 255);
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+		return o1<o2;
+	});
+
+	drawPanel->Refresh(false);*/
+
+	// sorting to be done on different thread to keep GUI responsive
+	std::thread worker(&GUIMyFrame1::BubbleSort, this);
+	// detaching thread
+	worker.detach();
+}
+
+void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
+{
+	// TODO: Implement m_button_ShuffleOnButtonClick
+	UpdateTabSize();
+	drawPanel->Refresh(false);
+}
+
+void GUIMyFrame1::m_button_PauseOnButtonClick(wxCommandEvent& event)
+{
+	// TODO: Implement m_button_PauseOnButtonClick
+}
+
+void GUIMyFrame1::m_button_StopOnButtonClick(wxCommandEvent& event)
+{
+	// TODO: Implement m_button_StopOnButtonClick
+}
+
+void GUIMyFrame1::m_button_ResetOnButtonClick(wxCommandEvent& event)
+{
+	// TODO: Implement m_button_ResetOnButtonClick
+}
+
 void GUIMyFrame1::UpdateTabSize()
 {
 	_tab.clear();
@@ -126,4 +122,34 @@ void GUIMyFrame1::UpdateTabSize()
 int GUIMyFrame1::GetShift(int w) {
 	int AllElemWidth = _tab.size() * int(w / _tab.size());
 	return (w - AllElemWidth) / 2;
+}
+
+void GUIMyFrame1::BubbleSort() {
+
+	for (int i = 0; i < _tab.size() - 1; i++)
+		for (int j = 0; j < _tab.size() - i - 1; j++) {
+
+			// GUI updates must take place on main thead
+			wxGetApp().CallAfter([this, j] {
+				drawPanel->Refresh(false);
+				_tab[j]._color = wxColor(255, 0, 0);
+				_tab[j + 1]._color = wxColor(0, 255, 0);
+			});
+
+			if (_tab[j + 1] < _tab[j])
+				std::swap(_tab[j + 1], _tab[j]);
+
+			std::this_thread::sleep_for(std::chrono::nanoseconds(300));
+
+			// GUI updates must take place on main thead
+			wxGetApp().CallAfter([this, j] {
+				drawPanel->Refresh(false);
+				_tab[j]._color = wxColor(255, 255, 255);
+				_tab[j + 1]._color = wxColor(255, 255, 255);
+			});
+		}
+
+	wxGetApp().CallAfter([this] {
+		drawPanel->Refresh(false);
+	});
 }
