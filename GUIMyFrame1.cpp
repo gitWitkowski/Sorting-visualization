@@ -84,10 +84,18 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 
 	drawPanel->Refresh(false);*/
 
-	// sorting to be done on different thread to keep GUI responsive
-	std::thread worker(&GUIMyFrame1::BubbleSort, this);
-	// detaching thread
-	worker.detach();
+	if (m_choice_SortType->GetSelection() == 0) {
+		// sorting to be done on different thread to keep GUI responsive
+		std::thread worker(&GUIMyFrame1::BubbleSort, this);
+		// detaching thread
+		worker.detach();
+	}
+	else if (m_choice_SortType->GetSelection() == 1) {
+		// sorting to be done on different thread to keep GUI responsive
+		std::thread worker(&GUIMyFrame1::InsertionSort, this);
+		// detaching thread
+		worker.detach();
+	}
 }
 
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
@@ -139,7 +147,7 @@ void GUIMyFrame1::BubbleSort() {
 			if (_tab[j + 1] < _tab[j])
 				std::swap(_tab[j + 1], _tab[j]);
 
-			std::this_thread::sleep_for(std::chrono::nanoseconds(300));
+			std::this_thread::sleep_for(std::chrono::nanoseconds(450));
 
 			// GUI updates must take place on main thead
 			wxGetApp().CallAfter([this, j] {
@@ -153,3 +161,46 @@ void GUIMyFrame1::BubbleSort() {
 		drawPanel->Refresh(false);
 	});
 }
+
+void GUIMyFrame1::InsertionSort() {
+	int i, key, j;
+	for (i = 1; i < _tab.size(); i++) {
+		key = _tab[i]._value;
+		j = i - 1;
+
+		wxGetApp().CallAfter([this, i] {
+			_tab[i]._color = wxColor(0, 255, 255);
+			drawPanel->Refresh(false);
+		});
+
+		// Move elements of arr[0..i-1],
+		// that are greater than key,
+		// to one position ahead of their
+		// current position
+		while (j >= 0 && _tab[j]._value > key) {
+			wxGetApp().CallAfter([this, j] {
+				_tab[j]._color = wxColor(255, 0, 0);
+				drawPanel->Refresh(false);
+			});
+			_tab[j + 1] = _tab[j];
+			std::this_thread::sleep_for(std::chrono::nanoseconds(450));
+			wxGetApp().CallAfter([this, j] {
+				_tab[j]._color = wxColor(255, 255, 255);
+				drawPanel->Refresh(false);
+			});
+			j = j - 1;
+		}
+		_tab[j + 1]._value = key;
+
+		wxGetApp().CallAfter([this, i] {
+			_tab[i]._color = wxColor(255, 255, 255);
+			drawPanel->Refresh(false);
+		});
+	}
+
+	// GUI updates must take place on main thead
+	wxGetApp().CallAfter([this, j] {
+		drawPanel->Refresh(false);
+	});
+}
+

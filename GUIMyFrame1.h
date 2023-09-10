@@ -43,6 +43,7 @@ class GUIMyFrame1 : public MyFrame1
 		void UpdateTabSize();
 		int GetShift(int); // return number of pixels from left side of the DrawPanel
 		void BubbleSort();
+		void InsertionSort();
 
 		std::vector<SortingElement> _tab;
 		int _maxElemValue;
