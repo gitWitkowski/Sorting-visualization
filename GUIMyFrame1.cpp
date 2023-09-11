@@ -2,9 +2,9 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ 25 }
+	MyFrame1(parent), _maxElemValue{ 25 }, delayTimeInMs{ m_spinDelay->GetValue() }
 {
-	//m_slider_Num_of_Elem->SetValue(20);
+	m_slider_Num_of_Elem->SetValue(20);
 	UpdateTabSize();
 	drawPanel->Refresh(false);
 }
@@ -67,35 +67,29 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
-	/*std::sort(_tab.begin(), _tab.end(), [&](const SortingElement& o1, const SortingElement& o2) {
-		
-		o1._color = wxColor(255, 0, 0);
-		o2._color = wxColor(0, 255, 0);
-		
-		drawPanel->Refresh(false);
+	
+	std::thread worker;
 
-		o1._color = wxColor(255, 255, 255);
-		o2._color = wxColor(255, 255, 255);
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
-		return o1<o2;
-	});
-
-	drawPanel->Refresh(false);*/
-
-	if (m_choice_SortType->GetSelection() == 0) {
+	if (m_choice_SortType->GetSelection() == BUBBLE_SORT) {
 		// sorting to be done on different thread to keep GUI responsive
-		std::thread worker(&GUIMyFrame1::BubbleSort, this);
-		// detaching thread
-		worker.detach();
+		worker = std::thread(&GUIMyFrame1::BubbleSort, this);
 	}
-	else if (m_choice_SortType->GetSelection() == 1) {
+	else if (m_choice_SortType->GetSelection() == INSERTION_SORT) {
 		// sorting to be done on different thread to keep GUI responsive
-		std::thread worker(&GUIMyFrame1::InsertionSort, this);
-		// detaching thread
-		worker.detach();
+		worker = std::thread(&GUIMyFrame1::InsertionSort, this);
 	}
+	else if (m_choice_SortType->GetSelection() == MERGE_SORT) {
+
+	}
+	else if (m_choice_SortType->GetSelection() == HEAP_SORT) {
+
+	}
+	else if (m_choice_SortType->GetSelection() == STD_SORT) {
+		worker = std::thread(&GUIMyFrame1::StdSort, this);
+	}
+	// detaching thread
+	if(worker.joinable())
+		worker.detach();
 }
 
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
@@ -147,7 +141,7 @@ void GUIMyFrame1::BubbleSort() {
 			if (_tab[j + 1] < _tab[j])
 				std::swap(_tab[j + 1], _tab[j]);
 
-			std::this_thread::sleep_for(std::chrono::nanoseconds(450));
+			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(delayTimeInMs * 1000)));
 
 			// GUI updates must take place on main thead
 			wxGetApp().CallAfter([this, j] {
@@ -183,7 +177,7 @@ void GUIMyFrame1::InsertionSort() {
 				drawPanel->Refresh(false);
 			});
 			_tab[j + 1] = _tab[j];
-			std::this_thread::sleep_for(std::chrono::nanoseconds(450));
+			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(delayTimeInMs * 1000)));
 			wxGetApp().CallAfter([this, j] {
 				_tab[j]._color = wxColor(255, 255, 255);
 				drawPanel->Refresh(false);
@@ -204,3 +198,31 @@ void GUIMyFrame1::InsertionSort() {
 	});
 }
 
+void GUIMyFrame1::StdSort() {
+	std::sort(_tab.begin(), _tab.end(), [this](SortingElement& o1, SortingElement& o2) {
+		// color changing operation temporary outside main thread?
+		o1._color = wxColor(255, 0, 0);
+		o2._color = wxColor(0, 255, 0);
+
+		wxGetApp().CallAfter([this] {	
+			drawPanel->Refresh(false);
+		});
+		
+		std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(delayTimeInMs * 1000)));
+
+		//wxGetApp().CallAfter([o1, o2] {
+			o1._color = wxColor(255, 255, 255);
+			o2._color = wxColor(255, 255, 255);
+		//});
+
+		return o1 < o2;
+	});
+
+	wxGetApp().CallAfter([this] {
+		drawPanel->Refresh(false);
+	});
+}
+
+void GUIMyFrame1::m_spinDelayOnSpinCtrlDouble(wxSpinDoubleEvent& event) {
+	delayTimeInMs = m_spinDelay->GetValue();
+}

@@ -46,7 +46,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 
-	wxString m_choice_SortTypeChoices[] = { wxT("sort 1"), wxT("sort 2"), wxT("sort 3"), wxT("sort 4"), wxT("sort 5") };
+	wxString m_choice_SortTypeChoices[] = { wxT("BUBBLE SORT"), wxT("INSERTION SORT"), wxT("MERGE SORT"), wxT("HEAP SORT"), wxT("STD::SORT") };
 	int m_choice_SortTypeNChoices = sizeof( m_choice_SortTypeChoices ) / sizeof( wxString );
 	m_choice_SortType = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice_SortTypeNChoices, m_choice_SortTypeChoices, 0 );
 	m_choice_SortType->SetSelection( 0 );
@@ -56,7 +56,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticText2->Wrap( -1 );
 	bSizer5->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 10, 25, 600, wxDefaultPosition, wxSize( -1,300 ), wxSL_VALUE_LABEL|wxSL_VERTICAL );
+	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 10, 25, 600, wxDefaultPosition, wxSize( -1,200 ), wxSL_VALUE_LABEL|wxSL_VERTICAL );
 	bSizer5->Add( m_slider_Num_of_Elem, 0, wxALIGN_CENTER|wxALL, 5 );
 
 	m_button_Sort = new wxButton( this, wxID_ANY, wxT("Sort"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -73,6 +73,14 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	m_button_Reset = new wxButton( this, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( m_button_Reset, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("Delay time (ms)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4->Wrap( -1 );
+	bSizer5->Add( m_staticText4, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	m_spinDelay = new wxSpinCtrlDouble( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT, 0, 1000, 0.5, 0.5 );
+	m_spinDelay->SetDigits( 2 );
+	bSizer5->Add( m_spinDelay, 0, wxALIGN_CENTER|wxALL, 5 );
 
 
 	bSizer3->Add( bSizer5, 0, wxEXPAND, 5 );
@@ -104,6 +112,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_Pause->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
+	m_spinDelay->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( MyFrame1::m_spinDelayOnSpinCtrlDouble ), NULL, this );
 }
 
 MyFrame1::~MyFrame1()
@@ -126,5 +135,6 @@ MyFrame1::~MyFrame1()
 	m_button_Pause->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
+	m_spinDelay->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( MyFrame1::m_spinDelayOnSpinCtrlDouble ), NULL, this );
 
 }
