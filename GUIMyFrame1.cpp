@@ -2,17 +2,18 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ 25 }, delayTimeInMs{ m_spinDelay->GetValue() }
+	MyFrame1(parent), _maxElemValue{ 25 }, _delayTimeInMs{ m_spinDelay->GetValue() }, _comparisonsNumber{0}
 {
+	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
 	m_slider_Num_of_Elem->SetValue(20);
 	UpdateTabSize();
-	drawPanel->Refresh(false);
+	// 60 fsp (1000 ms / 60 frames)
+	m_Timer.Start(1000 / 60);
 }
 
 void GUIMyFrame1::drawPanelOnSize(wxSizeEvent& event)
 {
 	// TODO: Implement drawPanelOnSize
-	drawPanel->Refresh(false);
 	std::string text = std::to_string(drawPanel->GetSize().x);
 	m_staticText2->SetLabel(text);
 }
@@ -60,13 +61,13 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 	// TODO: Implement m_slider_Num_of_ElemOnScroll
 	_maxElemValue = _tab.size();
 	UpdateTabSize();
-	drawPanel->Refresh(false);
-
 }
 
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
+
+	_comparisonsNumber = 0;
 	
 	std::thread worker;
 
@@ -96,7 +97,6 @@ void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_ShuffleOnButtonClick
 	UpdateTabSize();
-	drawPanel->Refresh(false);
 }
 
 void GUIMyFrame1::m_button_PauseOnButtonClick(wxCommandEvent& event)
@@ -131,9 +131,7 @@ void GUIMyFrame1::BubbleSort() {
 	for (int i = 0; i < _tab.size() - 1; i++)
 		for (int j = 0; j < _tab.size() - i - 1; j++) {
 
-			// GUI updates must take place on main thead
 			wxGetApp().CallAfter([this, j] {
-				drawPanel->Refresh(false);
 				_tab[j]._color = wxColor(255, 0, 0);
 				_tab[j + 1]._color = wxColor(0, 255, 0);
 			});
@@ -141,19 +139,15 @@ void GUIMyFrame1::BubbleSort() {
 			if (_tab[j + 1] < _tab[j])
 				std::swap(_tab[j + 1], _tab[j]);
 
-			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(delayTimeInMs * 1000)));
+			++_comparisonsNumber;
 
-			// GUI updates must take place on main thead
+			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
+
 			wxGetApp().CallAfter([this, j] {
-				drawPanel->Refresh(false);
 				_tab[j]._color = wxColor(255, 255, 255);
 				_tab[j + 1]._color = wxColor(255, 255, 255);
 			});
 		}
-
-	wxGetApp().CallAfter([this] {
-		drawPanel->Refresh(false);
-	});
 }
 
 void GUIMyFrame1::InsertionSort() {
@@ -164,38 +158,27 @@ void GUIMyFrame1::InsertionSort() {
 
 		wxGetApp().CallAfter([this, i] {
 			_tab[i]._color = wxColor(0, 255, 255);
-			drawPanel->Refresh(false);
 		});
 
-		// Move elements of arr[0..i-1],
-		// that are greater than key,
-		// to one position ahead of their
-		// current position
 		while (j >= 0 && _tab[j]._value > key) {
 			wxGetApp().CallAfter([this, j] {
 				_tab[j]._color = wxColor(255, 0, 0);
-				drawPanel->Refresh(false);
 			});
 			_tab[j + 1] = _tab[j];
-			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(delayTimeInMs * 1000)));
+			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
 			wxGetApp().CallAfter([this, j] {
 				_tab[j]._color = wxColor(255, 255, 255);
-				drawPanel->Refresh(false);
 			});
 			j = j - 1;
+			++_comparisonsNumber;
 		}
+		++_comparisonsNumber;
 		_tab[j + 1]._value = key;
 
 		wxGetApp().CallAfter([this, i] {
 			_tab[i]._color = wxColor(255, 255, 255);
-			drawPanel->Refresh(false);
 		});
 	}
-
-	// GUI updates must take place on main thead
-	wxGetApp().CallAfter([this, j] {
-		drawPanel->Refresh(false);
-	});
 }
 
 void GUIMyFrame1::StdSort() {
@@ -203,12 +186,10 @@ void GUIMyFrame1::StdSort() {
 		// color changing operation temporary outside main thread?
 		o1._color = wxColor(255, 0, 0);
 		o2._color = wxColor(0, 255, 0);
-
-		wxGetApp().CallAfter([this] {	
-			drawPanel->Refresh(false);
-		});
 		
-		std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(delayTimeInMs * 1000)));
+		++_comparisonsNumber;
+
+		std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
 
 		//wxGetApp().CallAfter([o1, o2] {
 			o1._color = wxColor(255, 255, 255);
@@ -217,12 +198,13 @@ void GUIMyFrame1::StdSort() {
 
 		return o1 < o2;
 	});
-
-	wxGetApp().CallAfter([this] {
-		drawPanel->Refresh(false);
-	});
 }
 
 void GUIMyFrame1::m_spinDelayOnSpinCtrlDouble(wxSpinDoubleEvent& event) {
-	delayTimeInMs = m_spinDelay->GetValue();
+	_delayTimeInMs = m_spinDelay->GetValue();
+}
+
+void GUIMyFrame1::m_TimerOnTimer(wxTimerEvent& event) {
+	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
+	drawPanel->Refresh(false);
 }

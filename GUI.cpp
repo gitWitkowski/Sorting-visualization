@@ -17,14 +17,15 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 
 	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 
-	staticText_title = new wxStaticText( this, wxID_ANY, wxT("title"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL );
-	staticText_title->Wrap( -1 );
-	staticText_title->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT ) );
-	staticText_title->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_INFOBK ) );
+	m_staticText5 = new wxStaticText( this, wxID_ANY, wxT("Comparisons:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText5->Wrap( -1 );
+	bSizer2->Add( m_staticText5, 0, wxALL, 5 );
 
-	bSizer2->Add( staticText_title, 1, wxALIGN_CENTER|wxALL, 0 );
+	m_ComparisonsNum = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 60,-1 ), wxALIGN_RIGHT );
+	m_ComparisonsNum->Wrap( -1 );
+	bSizer2->Add( m_ComparisonsNum, 0, wxALL, 5 );
 
 
 	bSizer1->Add( bSizer2, 0, wxEXPAND, 5 );
@@ -78,8 +79,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticText4->Wrap( -1 );
 	bSizer5->Add( m_staticText4, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_spinDelay = new wxSpinCtrlDouble( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT, 0, 1000, 0.5, 0.5 );
-	m_spinDelay->SetDigits( 2 );
+	m_spinDelay = new wxSpinCtrlDouble( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT, 0, 1e+06, 0.5, 0.1 );
+	m_spinDelay->SetDigits( 3 );
 	bSizer5->Add( m_spinDelay, 0, wxALIGN_CENTER|wxALL, 5 );
 
 
@@ -91,6 +92,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	this->SetSizer( bSizer1 );
 	this->Layout();
+	m_Timer.SetOwner( this, wxID_ANY );
 
 	this->Centre( wxBOTH );
 
@@ -113,6 +115,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_Stop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
 	m_spinDelay->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( MyFrame1::m_spinDelayOnSpinCtrlDouble ), NULL, this );
+	this->Connect( wxID_ANY, wxEVT_TIMER, wxTimerEventHandler( MyFrame1::m_TimerOnTimer ) );
 }
 
 MyFrame1::~MyFrame1()
@@ -136,5 +139,6 @@ MyFrame1::~MyFrame1()
 	m_button_Stop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
 	m_spinDelay->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( MyFrame1::m_spinDelayOnSpinCtrlDouble ), NULL, this );
+	this->Disconnect( wxID_ANY, wxEVT_TIMER, wxTimerEventHandler( MyFrame1::m_TimerOnTimer ) );
 
 }

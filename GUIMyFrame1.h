@@ -28,16 +28,17 @@ class GUIMyFrame1 : public MyFrame1
 {
 	protected:
 		// Handlers for MyFrame1 events.
-		void drawPanelOnPaint(wxPaintEvent& event);
-		void drawPanelOnSize(wxSizeEvent& event);
-		void m_choice_SortTypeOnChoice(wxCommandEvent& event);
-		void m_slider_Num_of_ElemOnScroll(wxScrollEvent& event);
-		void m_button_SortOnButtonClick(wxCommandEvent& event);
-		void m_button_ShuffleOnButtonClick(wxCommandEvent& event);
-		void m_button_PauseOnButtonClick(wxCommandEvent& event);
-		void m_button_StopOnButtonClick(wxCommandEvent& event);
-		void m_button_ResetOnButtonClick(wxCommandEvent& event);
-		void m_spinDelayOnSpinCtrlDouble(wxSpinDoubleEvent& event);
+		void drawPanelOnPaint( wxPaintEvent& event );
+		void drawPanelOnSize( wxSizeEvent& event );
+		void m_choice_SortTypeOnChoice( wxCommandEvent& event );
+		void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event );
+		void m_button_SortOnButtonClick( wxCommandEvent& event );
+		void m_button_ShuffleOnButtonClick( wxCommandEvent& event );
+		void m_button_PauseOnButtonClick( wxCommandEvent& event );
+		void m_button_StopOnButtonClick( wxCommandEvent& event );
+		void m_button_ResetOnButtonClick( wxCommandEvent& event );
+		void m_spinDelayOnSpinCtrlDouble( wxSpinDoubleEvent& event );
+		void m_TimerOnTimer( wxTimerEvent& event );
 	public:
 		/** Constructor */
 		GUIMyFrame1( wxWindow* parent );
@@ -50,7 +51,8 @@ class GUIMyFrame1 : public MyFrame1
 
 		std::vector<SortingElement> _tab;
 		int _maxElemValue;
-		double delayTimeInMs;
+		double _delayTimeInMs;
+		int _comparisonsNumber;
 
 		enum {
 			BUBBLE_SORT = 0,
@@ -59,6 +61,7 @@ class GUIMyFrame1 : public MyFrame1
 			HEAP_SORT = 3,
 			STD_SORT = 4
 		};
+
 
 
 
