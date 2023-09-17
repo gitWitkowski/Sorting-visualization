@@ -2,6 +2,8 @@
 
 SortingElement::SortingElement(int value, wxColor color) : _value{ value }, _color{ color } {}
 
+SortingElement::SortingElement(int value) : SortingElement{value, wxColor(255,255,255)} {}
+
 SortingElement getNewRandomElement(int max) {
 	int val = (rand() % max) + 1;
 	SortingElement temp(val, wxColor(255, 255, 255));

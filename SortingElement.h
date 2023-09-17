@@ -4,6 +4,7 @@
 
 struct SortingElement {
 		SortingElement(int, wxColor);
+		SortingElement(int);
 		int _value;
 		mutable wxColor _color;
 };

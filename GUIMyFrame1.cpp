@@ -2,11 +2,10 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ 25 }, _delayTimeInMs{ m_spinDelay->GetValue() }, _comparisonsNumber{0}
+	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInMs{m_spinDelay->GetValue()}, _comparisonsNumber{0}
 {
 	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
-	m_slider_Num_of_Elem->SetValue(20);
-	UpdateTabSize();
+	UpdateTab();
 	// 60 fsp (1000 ms / 60 frames)
 	m_Timer.Start(1000 / 60);
 }
@@ -15,7 +14,7 @@ void GUIMyFrame1::drawPanelOnSize(wxSizeEvent& event)
 {
 	// TODO: Implement drawPanelOnSize
 	std::string text = std::to_string(drawPanel->GetSize().x);
-	m_staticText2->SetLabel(text);
+	//m_staticText2->SetLabel(text);
 }
 
 
@@ -60,7 +59,7 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 {
 	// TODO: Implement m_slider_Num_of_ElemOnScroll
 	_maxElemValue = _tab.size();
-	UpdateTabSize();
+	UpdateTab();
 }
 
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
@@ -96,7 +95,8 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_ShuffleOnButtonClick
-	UpdateTabSize();
+	UpdateTab();
+	
 }
 
 void GUIMyFrame1::m_button_PauseOnButtonClick(wxCommandEvent& event)
@@ -114,11 +114,62 @@ void GUIMyFrame1::m_button_ResetOnButtonClick(wxCommandEvent& event)
 	// TODO: Implement m_button_ResetOnButtonClick
 }
 
-void GUIMyFrame1::UpdateTabSize()
+void GUIMyFrame1::UpdateTab()
 {
 	_tab.clear();
-	for (int i = 0; i < m_slider_Num_of_Elem->GetValue(); i++)
-		_tab.push_back(getNewRandomElement(_maxElemValue));
+
+	int TabSize = m_slider_Num_of_Elem->GetValue();
+	
+	// https://en.cppreference.com/w/cpp/algorithm/random_shuffle
+	std::random_device rd;
+	std::mt19937 g(rd());
+	//
+	std::uniform_int_distribution<std::mt19937::result_type> distrTabSize(0, TabSize - 1); // returns number between 0 and (TabSize - 1)
+	std::uniform_int_distribution<std::mt19937::result_type> distrCloseElement(0, TabSize / 20); // return number between 0 and (TabSize / 20)
+
+	if (m_shuffleType->GetSelection() == RANDOM_SHUFFLE) {
+		for (int i = 0; i < TabSize; i++)
+				_tab.push_back(SortingElement(i + 1));
+
+		std::shuffle(_tab.begin(), _tab.end(), g);
+	}
+	else if (m_shuffleType->GetSelection() == NEARLY_SORTED) {
+		for (int i = 0; i < TabSize; i++)
+			_tab.push_back(SortingElement(i + 1));
+
+		for (int i = 0; i < _tab.size() / 2; ++i) {
+			int indx1 = distrTabSize(g); // random index of first element to swap
+			int indx2 = indx1 + distrCloseElement(g); // random index of second element to swap, not farther than value returned by distrCloseElement
+
+			while (indx2 < 0 || indx2 >= TabSize) indx2 = indx1 + distrCloseElement(g); // generate new index if previous is invalid
+
+			std::swap(_tab[indx1], _tab[indx2]); // swap two elements (they are close to each other)
+		}
+	}
+	else if (m_shuffleType->GetSelection() == MANY_DUPLICATES) {
+		// array FewUnique containing 6 numbers used later as values for _tab 
+		int FewUnique[] = {
+			// 5 random numbers in range from 0 to (TabSize-1)
+			distrTabSize(g),
+			distrTabSize(g),
+			distrTabSize(g),
+			distrTabSize(g),
+			distrTabSize(g),
+			// 1 maximal value so that elements are always displayed nicely (correct scale)
+			TabSize
+		};
+		std::uniform_int_distribution<std::mt19937::result_type> distrFewUnique(0, 5); // random index from 0 to 5 to get number from array FewUnique
+		for (int i = 0; i < TabSize; i++)
+			_tab.push_back(SortingElement(FewUnique[distrFewUnique(g)]));
+	}
+	else if (m_shuffleType->GetSelection() == DESCENDING_ORDER) {
+		for (int i = TabSize; i > 0; i--)
+			_tab.push_back(SortingElement(i));
+	}
+	else if (m_shuffleType->GetSelection() == ALREADY_SORTED) {
+		for (int i = 0; i < TabSize; i++)
+			_tab.push_back(SortingElement(i + 1));
+	}
 }
 
 int GUIMyFrame1::GetShift(int w) {
@@ -191,10 +242,8 @@ void GUIMyFrame1::StdSort() {
 
 		std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
 
-		//wxGetApp().CallAfter([o1, o2] {
 			o1._color = wxColor(255, 255, 255);
 			o2._color = wxColor(255, 255, 255);
-		//});
 
 		return o1 < o2;
 	});

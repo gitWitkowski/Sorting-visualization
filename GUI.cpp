@@ -57,14 +57,20 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticText2->Wrap( -1 );
 	bSizer5->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 10, 25, 600, wxDefaultPosition, wxSize( -1,200 ), wxSL_VALUE_LABEL|wxSL_VERTICAL );
+	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 25, 25, 600, wxDefaultPosition, wxSize( 130,-1 ), wxSL_VALUE_LABEL );
 	bSizer5->Add( m_slider_Num_of_Elem, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_button_Sort = new wxButton( this, wxID_ANY, wxT("Sort"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_button_Sort, 0, wxALIGN_CENTER|wxALL, 5 );
+	wxString m_shuffleTypeChoices[] = { wxT("RANDOM SHUFFLE"), wxT("NEARLY SORTED"), wxT("MANY DUPLICATES"), wxT("DESCENDING ORDER"), wxT("ALREADY SORTED") };
+	int m_shuffleTypeNChoices = sizeof( m_shuffleTypeChoices ) / sizeof( wxString );
+	m_shuffleType = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_shuffleTypeNChoices, m_shuffleTypeChoices, 0 );
+	m_shuffleType->SetSelection( 0 );
+	bSizer5->Add( m_shuffleType, 0, wxALIGN_CENTER|wxALL, 5 );
 
 	m_button_Shuffle = new wxButton( this, wxID_ANY, wxT("Shuffle"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( m_button_Shuffle, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	m_button_Sort = new wxButton( this, wxID_ANY, wxT("Sort"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer5->Add( m_button_Sort, 0, wxALIGN_CENTER|wxALL, 5 );
 
 	m_button_Pause = new wxButton( this, wxID_ANY, wxT("Pause"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( m_button_Pause, 0, wxALIGN_CENTER|wxALL, 5 );
@@ -109,8 +115,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_slider_Num_of_Elem->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_slider_Num_of_Elem->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_slider_Num_of_Elem->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
-	m_button_Sort->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_SortOnButtonClick ), NULL, this );
 	m_button_Shuffle->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ShuffleOnButtonClick ), NULL, this );
+	m_button_Sort->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_SortOnButtonClick ), NULL, this );
 	m_button_Pause->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
@@ -133,8 +139,8 @@ MyFrame1::~MyFrame1()
 	m_slider_Num_of_Elem->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_slider_Num_of_Elem->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_slider_Num_of_Elem->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
-	m_button_Sort->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_SortOnButtonClick ), NULL, this );
 	m_button_Shuffle->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ShuffleOnButtonClick ), NULL, this );
+	m_button_Sort->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_SortOnButtonClick ), NULL, this );
 	m_button_Pause->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );

@@ -44,8 +44,9 @@ class MyFrame1 : public wxFrame
 		wxChoice* m_choice_SortType;
 		wxStaticText* m_staticText2;
 		wxSlider* m_slider_Num_of_Elem;
-		wxButton* m_button_Sort;
+		wxChoice* m_shuffleType;
 		wxButton* m_button_Shuffle;
+		wxButton* m_button_Sort;
 		wxButton* m_button_Pause;
 		wxButton* m_button_Stop;
 		wxButton* m_button_Reset;
@@ -58,8 +59,8 @@ class MyFrame1 : public wxFrame
 		virtual void drawPanelOnSize( wxSizeEvent& event ) { event.Skip(); }
 		virtual void m_choice_SortTypeOnChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event ) { event.Skip(); }
-		virtual void m_button_SortOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_ShuffleOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_SortOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_PauseOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_StopOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_ResetOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
