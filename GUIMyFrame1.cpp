@@ -125,7 +125,7 @@ void GUIMyFrame1::UpdateTab()
 	std::mt19937 g(rd());
 	//
 	std::uniform_int_distribution<std::mt19937::result_type> distrTabSize(0, TabSize - 1); // returns number between 0 and (TabSize - 1)
-	std::uniform_int_distribution<std::mt19937::result_type> distrCloseElement(0, TabSize / 20); // return number between 0 and (TabSize / 20)
+	std::uniform_int_distribution<std::mt19937::result_type> distrCloseElement(0, 2); // return number between 0 and 3
 
 	if (m_shuffleType->GetSelection() == RANDOM_SHUFFLE) {
 		for (int i = 0; i < TabSize; i++)
@@ -137,7 +137,7 @@ void GUIMyFrame1::UpdateTab()
 		for (int i = 0; i < TabSize; i++)
 			_tab.push_back(SortingElement(i + 1));
 
-		for (int i = 0; i < _tab.size() / 2; ++i) {
+		for (int i = 0; i < TabSize; i++) {
 			int indx1 = distrTabSize(g); // random index of first element to swap
 			int indx2 = indx1 + distrCloseElement(g); // random index of second element to swap, not farther than value returned by distrCloseElement
 
@@ -149,12 +149,12 @@ void GUIMyFrame1::UpdateTab()
 	else if (m_shuffleType->GetSelection() == MANY_DUPLICATES) {
 		// array FewUnique containing 6 numbers used later as values for _tab 
 		int FewUnique[] = {
-			// 5 random numbers in range from 0 to (TabSize-1)
-			distrTabSize(g),
-			distrTabSize(g),
-			distrTabSize(g),
-			distrTabSize(g),
-			distrTabSize(g),
+			// 5 random numbers in range from 1 to TabSize
+			distrTabSize(g) + 1,
+			distrTabSize(g) + 1,
+			distrTabSize(g) + 1,
+			distrTabSize(g) + 1,
+			distrTabSize(g) + 1,
 			// 1 maximal value so that elements are always displayed nicely (correct scale)
 			TabSize
 		};
@@ -233,7 +233,7 @@ void GUIMyFrame1::InsertionSort() {
 }
 
 void GUIMyFrame1::StdSort() {
-	std::sort(_tab.begin(), _tab.end(), [this](SortingElement& o1, SortingElement& o2) {
+	std::sort(_tab.begin(), _tab.end(), [this](const SortingElement& o1, const SortingElement& o2) {
 		// color changing operation temporary outside main thread?
 		o1._color = wxColor(255, 0, 0);
 		o2._color = wxColor(0, 255, 0);
