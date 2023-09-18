@@ -23,7 +23,6 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/spinctrl.h>
 #include <wx/timer.h>
 #include <wx/frame.h>
 
@@ -51,7 +50,8 @@ class MyFrame1 : public wxFrame
 		wxButton* m_button_Stop;
 		wxButton* m_button_Reset;
 		wxStaticText* m_staticText4;
-		wxSpinCtrlDouble* m_spinDelay;
+		wxStaticText* m_staticTextDelay;
+		wxSlider* m_sliderDelay;
 		wxTimer m_Timer;
 
 		// Virtual event handlers, override them in your derived class
@@ -64,7 +64,7 @@ class MyFrame1 : public wxFrame
 		virtual void m_button_PauseOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_StopOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_ResetOnButtonClick( wxCommandEvent& event ) { event.Skip(); }
-		virtual void m_spinDelayOnSpinCtrlDouble( wxSpinDoubleEvent& event ) { event.Skip(); }
+		virtual void m_sliderDelayOnScroll( wxScrollEvent& event ) { event.Skip(); }
 		virtual void m_TimerOnTimer( wxTimerEvent& event ) { event.Skip(); }
 
 

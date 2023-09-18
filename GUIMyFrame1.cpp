@@ -2,7 +2,7 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInMs{m_spinDelay->GetValue()}, _comparisonsNumber{0}
+	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{20}, _comparisonsNumber{0}
 {
 	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
 	UpdateTab();
@@ -66,7 +66,7 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
 
-	_comparisonsNumber = 0;
+	DisableButtons();
 	
 	std::thread worker;
 
@@ -150,11 +150,11 @@ void GUIMyFrame1::UpdateTab()
 		// array FewUnique containing 6 numbers used later as values for _tab 
 		int FewUnique[] = {
 			// 5 random numbers in range from 1 to TabSize
-			distrTabSize(g) + 1,
-			distrTabSize(g) + 1,
-			distrTabSize(g) + 1,
-			distrTabSize(g) + 1,
-			distrTabSize(g) + 1,
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
 			// 1 maximal value so that elements are always displayed nicely (correct scale)
 			TabSize
 		};
@@ -182,23 +182,20 @@ void GUIMyFrame1::BubbleSort() {
 	for (int i = 0; i < _tab.size() - 1; i++)
 		for (int j = 0; j < _tab.size() - i - 1; j++) {
 
-			wxGetApp().CallAfter([this, j] {
 				_tab[j]._color = wxColor(255, 0, 0);
 				_tab[j + 1]._color = wxColor(0, 255, 0);
-			});
 
 			if (_tab[j + 1] < _tab[j])
 				std::swap(_tab[j + 1], _tab[j]);
 
 			++_comparisonsNumber;
 
-			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
+			std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
 
-			wxGetApp().CallAfter([this, j] {
 				_tab[j]._color = wxColor(255, 255, 255);
 				_tab[j + 1]._color = wxColor(255, 255, 255);
-			});
 		}
+	EnableButtons();
 }
 
 void GUIMyFrame1::InsertionSort() {
@@ -207,53 +204,84 @@ void GUIMyFrame1::InsertionSort() {
 		key = _tab[i]._value;
 		j = i - 1;
 
-		wxGetApp().CallAfter([this, i] {
 			_tab[i]._color = wxColor(0, 255, 255);
-		});
 
 		while (j >= 0 && _tab[j]._value > key) {
-			wxGetApp().CallAfter([this, j] {
 				_tab[j]._color = wxColor(255, 0, 0);
-			});
-			_tab[j + 1] = _tab[j];
-			std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
-			wxGetApp().CallAfter([this, j] {
+			_tab[j + 1]._value = _tab[j]._value;
+			std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
 				_tab[j]._color = wxColor(255, 255, 255);
-			});
 			j = j - 1;
 			++_comparisonsNumber;
 		}
 		++_comparisonsNumber;
 		_tab[j + 1]._value = key;
 
-		wxGetApp().CallAfter([this, i] {
 			_tab[i]._color = wxColor(255, 255, 255);
-		});
 	}
+	EnableButtons();
 }
 
 void GUIMyFrame1::StdSort() {
 	std::sort(_tab.begin(), _tab.end(), [this](const SortingElement& o1, const SortingElement& o2) {
-		// color changing operation temporary outside main thread?
 		o1._color = wxColor(255, 0, 0);
 		o2._color = wxColor(0, 255, 0);
 		
 		++_comparisonsNumber;
 
-		std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>(_delayTimeInMs * 1000)));
+		std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
 
 			o1._color = wxColor(255, 255, 255);
 			o2._color = wxColor(255, 255, 255);
 
 		return o1 < o2;
 	});
+	EnableButtons();
 }
 
-void GUIMyFrame1::m_spinDelayOnSpinCtrlDouble(wxSpinDoubleEvent& event) {
-	_delayTimeInMs = m_spinDelay->GetValue();
+void GUIMyFrame1::m_sliderDelayOnScroll(wxScrollEvent& event) {
+	// calculations from:
+	// https://stackoverflow.com/questions/846221/logarithmic-slider
+	
+	double minp = 0;
+	double maxp = 50;
+
+	double minv = std::log(1);
+	double maxv = std::log(10000000);
+
+	double scale = (maxv - minv) / (maxp - minp);
+
+	_delayTimeInUs = std::exp(minv + scale * (static_cast<double>(m_sliderDelay->GetValue()) - minp))/10;
 }
 
 void GUIMyFrame1::m_TimerOnTimer(wxTimerEvent& event) {
 	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
 	drawPanel->Refresh(false);
+
+	// https://stackoverflow.com/questions/29200635/convert-float-to-string-with-precision-number-of-decimal-digits-specified
+	double temp = _delayTimeInUs / 1000; // us => ms (?)
+	std::stringstream stream;
+	stream << std::fixed << std::setprecision(4) << temp;
+	std::string s = stream.str();
+
+	m_staticTextDelay->SetLabel(s);
+}
+
+void GUIMyFrame1::DisableButtons() {
+	// reset comparision number
+	_comparisonsNumber = 0;
+
+	m_choice_SortType->Disable();
+	m_slider_Num_of_Elem->Disable();
+	m_shuffleType->Disable();
+	m_button_Shuffle->Disable();
+	m_button_Sort->Disable();
+}
+
+void GUIMyFrame1::EnableButtons() {
+	m_choice_SortType->Enable();
+	m_slider_Num_of_Elem->Enable();
+	m_shuffleType->Enable();
+	m_button_Shuffle->Enable();
+	m_button_Sort->Enable();
 }

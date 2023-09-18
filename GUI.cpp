@@ -85,9 +85,12 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticText4->Wrap( -1 );
 	bSizer5->Add( m_staticText4, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_spinDelay = new wxSpinCtrlDouble( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT, 0, 1e+06, 0.5, 0.1 );
-	m_spinDelay->SetDigits( 3 );
-	bSizer5->Add( m_spinDelay, 0, wxALIGN_CENTER|wxALL, 5 );
+	m_staticTextDelay = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 130,-1 ), wxALIGN_CENTER_HORIZONTAL );
+	m_staticTextDelay->Wrap( -1 );
+	bSizer5->Add( m_staticTextDelay, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	m_sliderDelay = new wxSlider( this, wxID_ANY, 1, 0, 50, wxDefaultPosition, wxSize( 130,-1 ), wxSL_HORIZONTAL );
+	bSizer5->Add( m_sliderDelay, 0, wxALIGN_CENTER|wxALL, 5 );
 
 
 	bSizer3->Add( bSizer5, 0, wxEXPAND, 5 );
@@ -120,7 +123,15 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_Pause->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
-	m_spinDelay->Connect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( MyFrame1::m_spinDelayOnSpinCtrlDouble ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
 	this->Connect( wxID_ANY, wxEVT_TIMER, wxTimerEventHandler( MyFrame1::m_TimerOnTimer ) );
 }
 
@@ -144,7 +155,15 @@ MyFrame1::~MyFrame1()
 	m_button_Pause->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
 	m_button_Reset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
-	m_spinDelay->Disconnect( wxEVT_COMMAND_SPINCTRLDOUBLE_UPDATED, wxSpinDoubleEventHandler( MyFrame1::m_spinDelayOnSpinCtrlDouble ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
+	m_sliderDelay->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
 	this->Disconnect( wxID_ANY, wxEVT_TIMER, wxTimerEventHandler( MyFrame1::m_TimerOnTimer ) );
 
 }
