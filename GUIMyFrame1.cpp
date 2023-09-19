@@ -2,7 +2,7 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{20}, _comparisonsNumber{0}
+	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{20}, _comparisonsNumber{0}, _tab{&_delayTimeInUs}
 {
 	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
 	UpdateTab();
@@ -35,8 +35,8 @@ void GUIMyFrame1::drawPanelOnPaint(wxPaintEvent& event)
 	int shift = GetShift(w);
 
 	for (int i = 0; i < _tab.size(); i++) {
-		wxBrush tempBrush(_tab[i]._color);
-		wxPen tempPen(_tab[i]._color, 0);
+		wxBrush tempBrush(_tab.GetColor(i));
+		wxPen tempPen(_tab.GetColor(i), 0);
 
 		dc.SetBrush(tempBrush);
 		dc.SetPen(tempPen);
@@ -182,18 +182,16 @@ void GUIMyFrame1::BubbleSort() {
 	for (int i = 0; i < _tab.size() - 1; i++)
 		for (int j = 0; j < _tab.size() - i - 1; j++) {
 
-				_tab[j]._color = wxColor(255, 0, 0);
-				_tab[j + 1]._color = wxColor(0, 255, 0);
+			_tab[j].SetColorRed();
+			_tab[j + 1].SetColorGreen();
 
-			if (_tab[j + 1] < _tab[j])
-				std::swap(_tab[j + 1], _tab[j]);
+			if (_tab.GetValue(j+1) < _tab.GetValue(j))
+				_tab.swap(j + 1, j);
 
 			++_comparisonsNumber;
 
-			std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
-
-				_tab[j]._color = wxColor(255, 255, 255);
-				_tab[j + 1]._color = wxColor(255, 255, 255);
+			_tab[j].SetColorWhite();
+			_tab[j + 1].SetColorWhite();
 		}
 	EnableButtons();
 }

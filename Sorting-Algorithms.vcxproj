@@ -142,12 +142,14 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="GUIMyFrame1.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SortingArray.cpp" />
     <ClCompile Include="SortingElement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h" />
     <ClInclude Include="GUIMyFrame1.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="SortingArray.h" />
     <ClInclude Include="SortingElement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
