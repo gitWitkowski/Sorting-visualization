@@ -205,7 +205,24 @@ int GUIMyFrame1::GetShift(int w) {
 }
 
 void GUIMyFrame1::BubbleSort() {
-
+	int size = _tab.size();
+	for (int i = 0; i < size - 1; i++) {
+		for (int j = 0; j < size - i - 1; j++) {
+			// set colors
+			_tab[j].SetColorGreen();
+			_tab[j + 1].SetColorBlue();
+			//
+			DoDelay();
+			if (_tab[j] > _tab[j + 1]) {
+				std::swap(_tab[j], _tab[j + 1]);
+				DoDelay();
+			}
+			// set colors
+			_tab[j].SetColorWhite();
+			_tab[j + 1].SetColorWhite();
+			//
+		}
+	}
 }
 
 void GUIMyFrame1::InsertionSort() {
