@@ -51,11 +51,25 @@ class GUIMyFrame1 : public MyFrame1
 	//// end generated class members
 		void UpdateTab();
 		int GetShift(int); // return number of pixels from left side of the DrawPanel
-		void BubbleSort();
-		void InsertionSort();
-		void StdSort();
 		void DisableButtons();
 		void EnableButtons();
+
+		/// sorting methods
+		void BubbleSort();
+		void InsertionSort();
+		void SelectionSort();
+		void MergeSort();
+		void InPlaceMergeSort();
+		void HeapSort();
+		void StdSort();
+		void QuickSort();
+		void TimSort();
+		void ShellSort();
+		void CocktailShakerSort();
+		void CombSort();
+		void GnomeSort();
+		void OddEvenSort();
+		void StrandSort();
 
 		std::vector<SortingElement> _tab;
 		int _maxElemValue;
@@ -63,19 +77,29 @@ class GUIMyFrame1 : public MyFrame1
 		int _comparisonsNumber;
 
 		enum {
-			BUBBLE_SORT = 0,
-			INSERTION_SORT = 1,
-			MERGE_SORT = 2,
-			HEAP_SORT = 3,
-			STD_SORT = 4
+			BUBBLE_SORT = 0,		// 0
+			INSERTION_SORT,			// 1
+			SELECTION_SORT,			// 2
+			MERGE_SORT,				// 3
+			IN_PLACE_MERGE_SORT,	// 4
+			HEAP_SORT,				// 5
+			STD_SORT,				// 6
+			QUICK_SORT,				// 7
+			TIM_SORT,				// 8
+			SHELL_SORT,				// 9
+			COCKTAIL_SHAKER_SORT,	// 10
+			COMB_SORT,				// 11
+			GNOME_SORT,				// 12
+			ODD_EVEN_SORT,			// 13
+			STRAND_SORT				// 14
 		};
 
 		enum {
 			RANDOM_SHUFFLE = 0,
-			NEARLY_SORTED = 1,
-			MANY_DUPLICATES = 2,
-			DESCENDING_ORDER = 3,
-			ALREADY_SORTED = 4
+			NEARLY_SORTED,
+			MANY_DUPLICATES,
+			DESCENDING_ORDER,
+			ALREADY_SORTED
 		};
 
 

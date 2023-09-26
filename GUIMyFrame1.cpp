@@ -70,23 +70,52 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 	
 	std::thread worker;
 
-	if (m_choice_SortType->GetSelection() == BUBBLE_SORT) {
-		// sorting to be done on different thread to keep GUI responsive
+	if (m_choice_SortType->GetSelection() == BUBBLE_SORT) {					// 0
 		worker = std::thread(&GUIMyFrame1::BubbleSort, this);
 	}
-	else if (m_choice_SortType->GetSelection() == INSERTION_SORT) {
-		// sorting to be done on different thread to keep GUI responsive
+	else if (m_choice_SortType->GetSelection() == INSERTION_SORT) {			// 1
 		worker = std::thread(&GUIMyFrame1::InsertionSort, this);
 	}
-	else if (m_choice_SortType->GetSelection() == MERGE_SORT) {
-
+	else if (m_choice_SortType->GetSelection() == SELECTION_SORT) {			// 2
+		worker = std::thread(&GUIMyFrame1::SelectionSort, this);
 	}
-	else if (m_choice_SortType->GetSelection() == HEAP_SORT) {
-
+	else if (m_choice_SortType->GetSelection() == MERGE_SORT) {				// 3
+		worker = std::thread(&GUIMyFrame1::MergeSort, this);
 	}
-	else if (m_choice_SortType->GetSelection() == STD_SORT) {
+	else if (m_choice_SortType->GetSelection() == IN_PLACE_MERGE_SORT) {	// 4
+		worker = std::thread(&GUIMyFrame1::InPlaceMergeSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == HEAP_SORT) {				// 5
+		worker = std::thread(&GUIMyFrame1::HeapSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == STD_SORT) {				// 6
 		worker = std::thread(&GUIMyFrame1::StdSort, this);
 	}
+	else if (m_choice_SortType->GetSelection() == QUICK_SORT) {				// 7
+		worker = std::thread(&GUIMyFrame1::QuickSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == TIM_SORT) {				// 8
+		worker = std::thread(&GUIMyFrame1::TimSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == SHELL_SORT) {				// 9
+		worker = std::thread(&GUIMyFrame1::ShellSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == COCKTAIL_SHAKER_SORT) {	// 10
+		worker = std::thread(&GUIMyFrame1::CocktailShakerSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == COMB_SORT) {				// 11
+		worker = std::thread(&GUIMyFrame1::CombSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == GNOME_SORT) {				// 12
+		worker = std::thread(&GUIMyFrame1::GnomeSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == ODD_EVEN_SORT) {			// 13
+		worker = std::thread(&GUIMyFrame1::OddEvenSort, this);
+	}
+	else if (m_choice_SortType->GetSelection() == STRAND_SORT) {			// 14
+		worker = std::thread(&GUIMyFrame1::StrandSort, this);
+	}
+
 	// detaching thread
 	if(worker.joinable())
 		worker.detach();
@@ -179,65 +208,64 @@ int GUIMyFrame1::GetShift(int w) {
 
 void GUIMyFrame1::BubbleSort() {
 
-	for (int i = 0; i < _tab.size() - 1; i++)
-		for (int j = 0; j < _tab.size() - i - 1; j++) {
-
-				_tab[j]._color = wxColor(255, 0, 0);
-				_tab[j + 1]._color = wxColor(0, 255, 0);
-
-			if (_tab[j + 1] < _tab[j])
-				std::swap(_tab[j + 1], _tab[j]);
-
-			++_comparisonsNumber;
-
-			std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
-
-				_tab[j]._color = wxColor(255, 255, 255);
-				_tab[j + 1]._color = wxColor(255, 255, 255);
-		}
-	EnableButtons();
 }
 
 void GUIMyFrame1::InsertionSort() {
-	int i, key, j;
-	for (i = 1; i < _tab.size(); i++) {
-		key = _tab[i]._value;
-		j = i - 1;
 
-			_tab[i]._color = wxColor(0, 255, 255);
+}
 
-		while (j >= 0 && _tab[j]._value > key) {
-				_tab[j]._color = wxColor(255, 0, 0);
-			_tab[j + 1]._value = _tab[j]._value;
-			std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
-				_tab[j]._color = wxColor(255, 255, 255);
-			j = j - 1;
-			++_comparisonsNumber;
-		}
-		++_comparisonsNumber;
-		_tab[j + 1]._value = key;
+void GUIMyFrame1::SelectionSort() {
 
-			_tab[i]._color = wxColor(255, 255, 255);
-	}
-	EnableButtons();
+}
+
+void GUIMyFrame1::MergeSort() {
+
+}
+
+void GUIMyFrame1::InPlaceMergeSort() {
+
+}
+
+void GUIMyFrame1::HeapSort() {
+
 }
 
 void GUIMyFrame1::StdSort() {
-	std::sort(_tab.begin(), _tab.end(), [this](const SortingElement& o1, const SortingElement& o2) {
-		o1._color = wxColor(255, 0, 0);
-		o2._color = wxColor(0, 255, 0);
-		
-		++_comparisonsNumber;
 
-		std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
-
-			o1._color = wxColor(255, 255, 255);
-			o2._color = wxColor(255, 255, 255);
-
-		return o1 < o2;
-	});
-	EnableButtons();
 }
+
+void GUIMyFrame1::QuickSort() {
+
+}
+
+void GUIMyFrame1::TimSort() {
+
+}
+
+void GUIMyFrame1::ShellSort() {
+
+}
+
+void GUIMyFrame1::CocktailShakerSort() {
+
+}
+
+void GUIMyFrame1::CombSort() {
+
+}
+
+void GUIMyFrame1::GnomeSort() {
+
+}
+
+void GUIMyFrame1::OddEvenSort() {
+
+}
+
+void GUIMyFrame1::StrandSort() {
+
+}
+
 
 void GUIMyFrame1::m_sliderDelayOnScroll(wxScrollEvent& event) {
 	// calculations from:
