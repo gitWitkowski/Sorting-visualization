@@ -65,8 +65,6 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
-
-	DisableButtons();
 	
 	std::thread worker;
 
@@ -312,4 +310,8 @@ void GUIMyFrame1::EnableButtons() {
 	m_shuffleType->Enable();
 	m_button_Shuffle->Enable();
 	m_button_Sort->Enable();
+}
+
+void GUIMyFrame1::DoDelay() {
+	std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
 }

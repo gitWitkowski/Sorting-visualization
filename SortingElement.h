@@ -5,10 +5,13 @@
 struct SortingElement {
 		SortingElement(int, wxColor);
 		SortingElement(int);
+		bool operator<(const SortingElement&) const;
+		bool operator>(const SortingElement&) const;
+		void SetColorWhite() const;
+		void SetColorRed() const;
+		void SetColorGreen() const;
+		void SetColorBlue() const;
+
 		int _value;
 		mutable wxColor _color;
 };
-
-SortingElement getNewRandomElement(int);
-
-bool operator<(const SortingElement&, const SortingElement&);

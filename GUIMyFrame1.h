@@ -53,6 +53,7 @@ class GUIMyFrame1 : public MyFrame1
 		int GetShift(int); // return number of pixels from left side of the DrawPanel
 		void DisableButtons();
 		void EnableButtons();
+		void DoDelay();
 
 		/// sorting methods
 		void BubbleSort();

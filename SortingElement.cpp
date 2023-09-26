@@ -4,12 +4,26 @@ SortingElement::SortingElement(int value, wxColor color) : _value{ value }, _col
 
 SortingElement::SortingElement(int value) : SortingElement{value, wxColor(255,255,255)} {}
 
-SortingElement getNewRandomElement(int max) {
-	int val = (rand() % max) + 1;
-	SortingElement temp(val, wxColor(255, 255, 255));
-	return temp;
+bool SortingElement::operator<(const SortingElement& o) const{
+	return _value < o._value;
 }
 
-bool operator<(const SortingElement& o1, const SortingElement& o2) {
-	return o1._value < o2._value;
+bool SortingElement::operator>(const SortingElement& o) const {
+	return _value > o._value;
+}
+
+void SortingElement::SetColorWhite() const {
+	_color = wxColor(255, 255, 255);
+}
+
+void SortingElement::SetColorRed() const {
+	_color = wxColor(255, 0, 0);
+}
+
+void SortingElement::SetColorGreen() const {
+	_color = wxColor(0, 255, 0);
+}
+
+void SortingElement::SetColorBlue() const {
+	_color = wxColor(0, 0, 255);
 }
