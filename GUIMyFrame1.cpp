@@ -246,7 +246,14 @@ void GUIMyFrame1::HeapSort() {
 }
 
 void GUIMyFrame1::StdSort() {
-
+	std::sort(_tab.begin(), _tab.end(), [this](const SortingElement& o1, const SortingElement& o2) {
+		o1.SetColorGreen();
+		o2.SetColorBlue();
+		DoDelay();
+		o1.SetColorWhite();
+		o2.SetColorWhite();
+		return o1 < o2;
+	});
 }
 
 void GUIMyFrame1::QuickSort() {
