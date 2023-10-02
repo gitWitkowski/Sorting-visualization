@@ -230,7 +230,33 @@ void GUIMyFrame1::InsertionSort() {
 }
 
 void GUIMyFrame1::SelectionSort() {
-
+	for (int i = 0; i < _tab.size() - 1; i++) {
+		// find min element in _tab[i ... size - 1]
+			SortingElement* min = &_tab[i];
+			min->SetColorGreen();
+			for (int j = i + 1; j < _tab.size(); j++) {
+				_tab[j].SetColorRed();
+				DoDelay();
+				if (_tab[j] < *min) {
+					min->SetColorWhite();
+					min = &_tab[j];
+					min->SetColorGreen();
+				}
+				else {
+					_tab[j].SetColorWhite();
+				}
+			}
+		//
+		_tab[i].SetColorRed();
+			DoDelay();
+			// swap min element with current element
+			std::swap(_tab[i], *min);
+			DoDelay();
+			_tab[i].SetColorWhite();
+			min->SetColorWhite();
+			DoDelay();
+		//
+	}
 }
 
 void GUIMyFrame1::MergeSort() {
