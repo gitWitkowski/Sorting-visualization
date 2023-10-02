@@ -248,14 +248,13 @@ void GUIMyFrame1::SelectionSort() {
 			}
 		//
 		_tab[i].SetColorRed();
-			DoDelay();
-			// swap min element with current element
-			std::swap(_tab[i], *min);
-			DoDelay();
-			_tab[i].SetColorWhite();
-			min->SetColorWhite();
-			DoDelay();
-		//
+		DoDelay();
+		// swap min element with current element
+		std::swap(_tab[i], *min);
+		DoDelay();
+		_tab[i].SetColorWhite();
+		min->SetColorWhite();
+		DoDelay();
 	}
 }
 
@@ -295,6 +294,38 @@ void GUIMyFrame1::ShellSort() {
 }
 
 void GUIMyFrame1::CocktailShakerSort() {
+	int bottom = 0;
+	int top = _tab.size() - 1;
+	bool swapped = true;
+	while (swapped) {
+		swapped = false;
+		for (int i = bottom; i < top; i++) {
+			_tab[i].SetColorRed();
+			_tab[i+1].SetColorGreen();
+			DoDelay();
+			if (_tab[i] > _tab[i + 1]) {
+				std::swap(_tab[i], _tab[i + 1]);
+				swapped = true;
+				DoDelay();
+			}
+			_tab[i].SetColorWhite();
+			_tab[i+1].SetColorWhite();
+		}
+		top--;
+		for (int i = top; i > bottom; i--) {
+			_tab[i].SetColorRed();
+			_tab[i-1].SetColorGreen();
+			DoDelay();
+			if (_tab[i] < _tab[i - 1]) {
+				std::swap(_tab[i], _tab[i - 1]);
+				swapped = true;
+				DoDelay();
+			}
+			_tab[i].SetColorWhite();
+			_tab[i-1].SetColorWhite();
+		}
+		bottom++;
+	}
 
 }
 
