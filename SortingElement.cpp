@@ -12,6 +12,14 @@ bool SortingElement::operator>(const SortingElement& o) const {
 	return _value > o._value;
 }
 
+bool SortingElement::operator<=(const SortingElement& o) const {
+	return _value <= o._value;
+}
+
+bool SortingElement::operator>=(const SortingElement& o) const {
+	return _value >= o._value;
+}
+
 void SortingElement::SetColorWhite() const {
 	_color = wxColor(255, 255, 255);
 }

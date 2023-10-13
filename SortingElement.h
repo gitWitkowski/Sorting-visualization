@@ -4,9 +4,11 @@
 
 struct SortingElement {
 		SortingElement(int, wxColor);
-		SortingElement(int);
+		SortingElement(int value = 0);
 		bool operator<(const SortingElement&) const;
 		bool operator>(const SortingElement&) const;
+		bool operator<=(const SortingElement&) const;
+		bool operator>=(const SortingElement&) const;
 		void SetColorWhite() const;
 		void SetColorRed() const;
 		void SetColorGreen() const;

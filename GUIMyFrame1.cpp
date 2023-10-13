@@ -78,7 +78,7 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 		worker = std::thread(&GUIMyFrame1::SelectionSort, this);
 	}
 	else if (m_choice_SortType->GetSelection() == MERGE_SORT) {				// 3
-		worker = std::thread(&GUIMyFrame1::MergeSort, this);
+		worker = std::thread(&GUIMyFrame1::MergeSort, this, 0, _tab.size()-1);
 	}
 	else if (m_choice_SortType->GetSelection() == IN_PLACE_MERGE_SORT) {	// 4
 		worker = std::thread(&GUIMyFrame1::InPlaceMergeSort, this);
@@ -258,8 +258,83 @@ void GUIMyFrame1::SelectionSort() {
 	}
 }
 
-void GUIMyFrame1::MergeSort() {
+// additional method to merge two sorted arrays into one 
+void GUIMyFrame1::Merge(int p, int q, int r) {
+	// https://www.programiz.com/dsa/merge-sort
+	// https://pl.wikipedia.org/wiki/Sortowanie_przez_scalanie
 
+	// number of elements in left and right tab, after the partition
+	int lNum = q - p + 1;
+	int rNum = r - q;
+
+	// dynamically allocated tables
+	SortingElement *tabLeft = new SortingElement[lNum];
+	SortingElement *tabRight= new SortingElement[rNum];
+
+	// copy elements from _tab to tabLeft
+	for (int i = 0; i < lNum; i++)
+		tabLeft[i] = _tab[p + i];
+
+	// copy elements from _tab to tabRight
+	for (int i = 0; i < rNum; i++)
+		tabRight[i] = _tab[q + 1 + i];
+
+	// numbers tracking current index in leftTab, rightTab
+	int leftIndex = 0;
+	int rightIndex = 0;
+
+	// current index in _tab
+	int currentIndex = p;
+
+	// merge left and right tab until one of them is empty
+	while (leftIndex < lNum && rightIndex < rNum) {
+		if (tabLeft[leftIndex] <= tabRight[rightIndex]) {
+			_tab[currentIndex] = tabLeft[leftIndex];
+			DoDelay();
+			leftIndex++;
+		}
+		else {
+			_tab[currentIndex] = tabRight[rightIndex];
+			DoDelay();
+			rightIndex++;
+		}
+		currentIndex++;
+	}
+
+	// copy elements remaining only in left table
+	while (leftIndex < lNum) {
+		_tab[currentIndex] = tabLeft[leftIndex];
+		DoDelay();
+		leftIndex++;
+		currentIndex++;
+	}
+
+	// copy elements remaining only in right table
+	while (rightIndex < rNum) {
+		_tab[currentIndex] = tabRight[rightIndex];
+		DoDelay();
+		rightIndex++;
+		currentIndex++;
+	}
+
+	// free allocated memory
+	delete[] tabLeft;
+	delete[] tabRight;
+}
+
+void GUIMyFrame1::MergeSort(int p, int r) { // p, r - beginning, end index
+	// check if array indexes are right
+	if (p >= r)
+		return;
+
+	int q = (p + r) / 2; // q - middle index
+	
+	// sort left part recursively
+	MergeSort(p, q);
+	// sort right part recursivelly
+	MergeSort(q+1, r);
+	// merge sorted parts
+	Merge(p, q, r);
 }
 
 void GUIMyFrame1::InPlaceMergeSort() {

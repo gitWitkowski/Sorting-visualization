@@ -59,7 +59,8 @@ class GUIMyFrame1 : public MyFrame1
 		void BubbleSort();
 		void InsertionSort();
 		void SelectionSort();
-		void MergeSort();
+		void Merge(int, int, int);
+		void MergeSort(int, int);
 		void InPlaceMergeSort();
 		void HeapSort();
 		void StdSort();
