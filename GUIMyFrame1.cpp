@@ -267,9 +267,9 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	int lNum = q - p + 1;
 	int rNum = r - q;
 
-	// dynamically allocated tables
-	SortingElement *tabLeft = new SortingElement[lNum];
-	SortingElement *tabRight= new SortingElement[rNum];
+	// dynamically allocated tables using smart pointer
+	std::unique_ptr<SortingElement[]> tabLeft(new SortingElement[lNum]);
+	std::unique_ptr<SortingElement[]> tabRight(new SortingElement[rNum]);
 
 	// copy elements from _tab to tabLeft
 	for (int i = 0; i < lNum; i++)
@@ -316,10 +316,6 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 		rightIndex++;
 		currentIndex++;
 	}
-
-	// free allocated memory
-	delete[] tabLeft;
-	delete[] tabRight;
 }
 
 void GUIMyFrame1::MergeSort(int p, int r) { // p, r - beginning, end index
@@ -469,5 +465,6 @@ void GUIMyFrame1::EnableButtons() {
 }
 
 void GUIMyFrame1::DoDelay() {
+	//wxMicroSleep(static_cast<int>(_delayTimeInUs));
 	std::this_thread::sleep_for(std::chrono::microseconds(static_cast<int>(_delayTimeInUs)));
 }
