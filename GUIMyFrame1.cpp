@@ -1,4 +1,4 @@
-#include "GUIMyFrame1.h"
+﻿#include "GUIMyFrame1.h"
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
@@ -226,7 +226,26 @@ void GUIMyFrame1::BubbleSort() {
 }
 
 void GUIMyFrame1::InsertionSort() {
-
+	// https://en.wikipedia.org/wiki/Insertion_sort
+	
+	for (int i = 0; i < _tab.size(); i++) {
+		int j = i;
+		_tab[i].setColorBlue();
+		while (j > 0 && _tab[j-1] > _tab[j]) {
+			_tab[i].setColorBlue();
+			_tab[j].setColorRed();
+			_tab[j-1].setColorGreen();
+			DoDelay();
+			std::swap(_tab[j - 1], _tab[j]);
+			_tab[j].setColorGreen();
+			_tab[j - 1].setColorRed();
+			DoDelay();
+			_tab[j].setColorWhite();
+			_tab[j - 1].setColorWhite();
+			j--;
+		}
+		_tab[i].setColorWhite();
+	}
 }
 
 void GUIMyFrame1::SelectionSort() {
