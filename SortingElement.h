@@ -9,10 +9,11 @@ struct SortingElement {
 		bool operator>(const SortingElement&) const;
 		bool operator<=(const SortingElement&) const;
 		bool operator>=(const SortingElement&) const;
-		void SetColorWhite() const;
-		void SetColorRed() const;
-		void SetColorGreen() const;
-		void SetColorBlue() const;
+		SortingElement &operator=(const SortingElement &);
+		void setColorWhite() const;
+		void setColorRed() const;
+		void setColorGreen() const;
+		void setColorBlue() const;
 
 		int _value;
 		mutable wxColor _color;

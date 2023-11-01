@@ -20,18 +20,24 @@ bool SortingElement::operator>=(const SortingElement& o) const {
 	return _value >= o._value;
 }
 
-void SortingElement::SetColorWhite() const {
+SortingElement &SortingElement::operator=(const SortingElement& obj) {
+	_value = obj._value;
+	// no _color assignment
+	return *this;
+}
+
+void SortingElement::setColorWhite() const {
 	_color = wxColor(255, 255, 255);
 }
 
-void SortingElement::SetColorRed() const {
+void SortingElement::setColorRed() const {
 	_color = wxColor(255, 0, 0);
 }
 
-void SortingElement::SetColorGreen() const {
+void SortingElement::setColorGreen() const {
 	_color = wxColor(0, 255, 0);
 }
 
-void SortingElement::SetColorBlue() const {
+void SortingElement::setColorBlue() const {
 	_color = wxColor(0, 0, 255);
 }

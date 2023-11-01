@@ -209,8 +209,8 @@ void GUIMyFrame1::BubbleSort() {
 	for (int i = 0; i < size - 1; i++) {
 		for (int j = 0; j < size - i - 1; j++) {
 			// set colors
-			_tab[j].SetColorGreen();
-			_tab[j + 1].SetColorBlue();
+			_tab[j].setColorGreen();
+			_tab[j + 1].setColorBlue();
 			//
 			DoDelay();
 			if (_tab[j] > _tab[j + 1]) {
@@ -218,8 +218,8 @@ void GUIMyFrame1::BubbleSort() {
 				DoDelay();
 			}
 			// set colors
-			_tab[j].SetColorWhite();
-			_tab[j + 1].SetColorWhite();
+			_tab[j].setColorWhite();
+			_tab[j + 1].setColorWhite();
 			//
 		}
 	}
@@ -233,27 +233,27 @@ void GUIMyFrame1::SelectionSort() {
 	for (int i = 0; i < _tab.size() - 1; i++) {
 		// find min element in _tab[i ... size - 1]
 			SortingElement* min = &_tab[i];
-			min->SetColorGreen();
+			min->setColorGreen();
 			for (int j = i + 1; j < _tab.size(); j++) {
-				_tab[j].SetColorRed();
+				_tab[j].setColorRed();
 				DoDelay();
 				if (_tab[j] < *min) {
-					min->SetColorWhite();
+					min->setColorWhite();
 					min = &_tab[j];
-					min->SetColorGreen();
+					min->setColorGreen();
 				}
 				else {
-					_tab[j].SetColorWhite();
+					_tab[j].setColorWhite();
 				}
 			}
 		//
-		_tab[i].SetColorRed();
+		_tab[i].setColorRed();
 		DoDelay();
 		// swap min element with current element
 		std::swap(_tab[i], *min);
 		DoDelay();
-		_tab[i].SetColorWhite();
-		min->SetColorWhite();
+		_tab[i].setColorWhite();
+		min->setColorWhite();
 		DoDelay();
 	}
 }
@@ -267,9 +267,13 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	int lNum = q - p + 1;
 	int rNum = r - q;
 
-	// dynamically allocated tables using smart pointer
-	std::unique_ptr<SortingElement[]> tabLeft(new SortingElement[lNum]);
-	std::unique_ptr<SortingElement[]> tabRight(new SortingElement[rNum]);
+	// vectors of elements
+	std::vector<SortingElement> tabLeft(lNum);
+	std::vector<SortingElement> tabRight(rNum);
+
+	// temporary table for elements from _tab[p..r] in sorted order
+	// so that comparising elements from tabLeft and tabRight can be first visualized and then sorted part gets copied to _tab
+	std::vector<SortingElement> temporaryTab(lNum + rNum);
 
 	// copy elements from _tab to tabLeft
 	for (int i = 0; i < lNum; i++)
@@ -283,19 +287,28 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	int leftIndex = 0;
 	int rightIndex = 0;
 
-	// current index in _tab
-	int currentIndex = p;
+	// current index in temporaryTab
+	int currentIndex = 0;
 
 	// merge left and right tab until one of them is empty
 	while (leftIndex < lNum && rightIndex < rNum) {
+		_tab[p + leftIndex].setColorRed();
+		_tab[q + 1 + rightIndex].setColorRed();
+
 		if (tabLeft[leftIndex] <= tabRight[rightIndex]) {
-			_tab[currentIndex] = tabLeft[leftIndex];
+			temporaryTab[currentIndex] = tabLeft[leftIndex];
+			_tab[p + leftIndex].setColorGreen();
 			DoDelay();
+			_tab[p + leftIndex].setColorWhite();
+			_tab[q + 1 + rightIndex].setColorWhite();
 			leftIndex++;
 		}
 		else {
-			_tab[currentIndex] = tabRight[rightIndex];
+			temporaryTab[currentIndex] = tabRight[rightIndex];
+			_tab[q + 1 + rightIndex].setColorGreen();
 			DoDelay();
+			_tab[p + leftIndex].setColorWhite();
+			_tab[q + 1 + rightIndex].setColorWhite();
 			rightIndex++;
 		}
 		currentIndex++;
@@ -303,18 +316,30 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 
 	// copy elements remaining only in left table
 	while (leftIndex < lNum) {
-		_tab[currentIndex] = tabLeft[leftIndex];
+		_tab[p + leftIndex].setColorGreen();
 		DoDelay();
+		temporaryTab[currentIndex] = tabLeft[leftIndex];
+		_tab[p + leftIndex].setColorWhite();
 		leftIndex++;
 		currentIndex++;
 	}
 
 	// copy elements remaining only in right table
 	while (rightIndex < rNum) {
-		_tab[currentIndex] = tabRight[rightIndex];
+		_tab[q + 1 + rightIndex].setColorGreen();
 		DoDelay();
+		temporaryTab[currentIndex] = tabRight[rightIndex];
+		_tab[q + 1 + rightIndex].setColorWhite();
 		rightIndex++;
 		currentIndex++;
+	}
+
+	// copy elements from temporaryTab to _tab and display the process (copied elements are drawn as blue)
+	for (int i = 0; i < (lNum + rNum); i++) {
+		_tab[p + i] = temporaryTab[i];
+		_tab[p + i].setColorBlue();
+		DoDelay();
+		_tab[p + i].setColorWhite();
 	}
 }
 
@@ -343,11 +368,11 @@ void GUIMyFrame1::HeapSort() {
 
 void GUIMyFrame1::StdSort() {
 	std::sort(_tab.begin(), _tab.end(), [this](const SortingElement& o1, const SortingElement& o2) {
-		o1.SetColorGreen();
-		o2.SetColorBlue();
+		o1.setColorGreen();
+		o2.setColorBlue();
 		DoDelay();
-		o1.SetColorWhite();
-		o2.SetColorWhite();
+		o1.setColorWhite();
+		o2.setColorWhite();
 		return o1 < o2;
 	});
 }
@@ -371,29 +396,29 @@ void GUIMyFrame1::CocktailShakerSort() {
 	while (swapped) {
 		swapped = false;
 		for (int i = bottom; i < top; i++) {
-			_tab[i].SetColorRed();
-			_tab[i+1].SetColorGreen();
+			_tab[i].setColorRed();
+			_tab[i+1].setColorGreen();
 			DoDelay();
 			if (_tab[i] > _tab[i + 1]) {
 				std::swap(_tab[i], _tab[i + 1]);
 				swapped = true;
 				DoDelay();
 			}
-			_tab[i].SetColorWhite();
-			_tab[i+1].SetColorWhite();
+			_tab[i].setColorWhite();
+			_tab[i+1].setColorWhite();
 		}
 		top--;
 		for (int i = top; i > bottom; i--) {
-			_tab[i].SetColorRed();
-			_tab[i-1].SetColorGreen();
+			_tab[i].setColorRed();
+			_tab[i-1].setColorGreen();
 			DoDelay();
 			if (_tab[i] < _tab[i - 1]) {
 				std::swap(_tab[i], _tab[i - 1]);
 				swapped = true;
 				DoDelay();
 			}
-			_tab[i].SetColorWhite();
-			_tab[i-1].SetColorWhite();
+			_tab[i].setColorWhite();
+			_tab[i-1].setColorWhite();
 		}
 		bottom++;
 	}
