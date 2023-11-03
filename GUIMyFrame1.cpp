@@ -405,7 +405,32 @@ void GUIMyFrame1::TimSort() {
 }
 
 void GUIMyFrame1::ShellSort() {
+	// https://en.wikipedia.org/wiki/Shellsort
 
+	// gaps sequence
+	int gaps[] = { 701, 301, 132, 57, 23, 10, 4, 1 };
+
+	for (int gap : gaps) {
+		// insertion sort for each gap from gaps tab
+		for (int i = gap; i < _tab.size(); i++) {
+			int j = i;
+			_tab[i].setColorBlue();
+			while (j>=gap && _tab[j - gap] > _tab[j]) {
+				_tab[i].setColorBlue();
+				_tab[j].setColorRed();
+				_tab[j - gap].setColorGreen();
+				DoDelay();
+				std::swap(_tab[j - gap], _tab[j]);
+				_tab[j].setColorGreen();
+				_tab[j - gap].setColorRed();
+				DoDelay();
+				_tab[j].setColorWhite();
+				_tab[j - gap].setColorWhite();
+				j-=gap;
+			}
+			_tab[i].setColorWhite();
+		}
+	}
 }
 
 void GUIMyFrame1::CocktailShakerSort() {
