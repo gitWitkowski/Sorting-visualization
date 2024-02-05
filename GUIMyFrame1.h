@@ -42,9 +42,7 @@ class GUIMyFrame1 : public MyFrame1
 		void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event );
 		void m_button_SortOnButtonClick( wxCommandEvent& event );
 		void m_button_ShuffleOnButtonClick( wxCommandEvent& event );
-		void m_button_PauseOnButtonClick( wxCommandEvent& event );
 		void m_button_StopOnButtonClick( wxCommandEvent& event );
-		void m_button_ResetOnButtonClick( wxCommandEvent& event );
 		void m_sliderDelayOnScroll(wxScrollEvent& event);
 		void m_TimerOnTimer( wxTimerEvent& event );
 	public:
@@ -79,8 +77,9 @@ class GUIMyFrame1 : public MyFrame1
 		int _maxElemValue;
 		double _delayTimeInUs;
 		int _comparisonsNumber;
+		std::jthread _bgThread;
 
-		enum {
+		enum sortingType {
 			BUBBLE_SORT = 0,		// 0
 			INSERTION_SORT,			// 1
 			SELECTION_SORT,			// 2
@@ -98,7 +97,7 @@ class GUIMyFrame1 : public MyFrame1
 			STRAND_SORT				// 14
 		};
 
-		enum {
+		enum shiffleType {
 			RANDOM_SHUFFLE = 0,
 			NEARLY_SORTED,
 			MANY_DUPLICATES,

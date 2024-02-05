@@ -66,57 +66,75 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
 	
-	std::thread worker;
+	switch (m_choice_SortType->GetSelection())
+	{
+	case BUBBLE_SORT: // 0
+		_bgThread = std::jthread(&GUIMyFrame1::BubbleSort, this);
+		break;
 
-	if (m_choice_SortType->GetSelection() == BUBBLE_SORT) {					// 0
-		worker = std::thread(&GUIMyFrame1::BubbleSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == INSERTION_SORT) {			// 1
-		worker = std::thread(&GUIMyFrame1::InsertionSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == SELECTION_SORT) {			// 2
-		worker = std::thread(&GUIMyFrame1::SelectionSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == MERGE_SORT) {				// 3
-		worker = std::thread(&GUIMyFrame1::MergeSort, this, 0, _tab.size()-1);
-	}
-	else if (m_choice_SortType->GetSelection() == IN_PLACE_MERGE_SORT) {	// 4
-		worker = std::thread(&GUIMyFrame1::InPlaceMergeSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == HEAP_SORT) {				// 5
-		worker = std::thread(&GUIMyFrame1::HeapSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == STD_SORT) {				// 6
-		worker = std::thread(&GUIMyFrame1::StdSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == QUICK_SORT) {				// 7
-		worker = std::thread(&GUIMyFrame1::QuickSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == TIM_SORT) {				// 8
-		worker = std::thread(&GUIMyFrame1::TimSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == SHELL_SORT) {				// 9
-		worker = std::thread(&GUIMyFrame1::ShellSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == COCKTAIL_SHAKER_SORT) {	// 10
-		worker = std::thread(&GUIMyFrame1::CocktailShakerSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == COMB_SORT) {				// 11
-		worker = std::thread(&GUIMyFrame1::CombSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == GNOME_SORT) {				// 12
-		worker = std::thread(&GUIMyFrame1::GnomeSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == ODD_EVEN_SORT) {			// 13
-		worker = std::thread(&GUIMyFrame1::OddEvenSort, this);
-	}
-	else if (m_choice_SortType->GetSelection() == STRAND_SORT) {			// 14
-		worker = std::thread(&GUIMyFrame1::StrandSort, this);
+	case INSERTION_SORT: // 1
+		_bgThread = std::jthread(&GUIMyFrame1::InsertionSort, this);
+		break;
+
+	case SELECTION_SORT: // 2
+		_bgThread = std::jthread(&GUIMyFrame1::SelectionSort, this);
+		break;
+
+	case MERGE_SORT: // 3
+		_bgThread = std::jthread(&GUIMyFrame1::MergeSort, this, 0, _tab.size() - 1);
+		break;
+
+	case IN_PLACE_MERGE_SORT: // 4
+		_bgThread = std::jthread(&GUIMyFrame1::InPlaceMergeSort, this);
+		break;
+
+	case HEAP_SORT: // 5
+		_bgThread = std::jthread(&GUIMyFrame1::HeapSort, this);
+		break;
+
+	case STD_SORT: // 6
+		_bgThread = std::jthread(&GUIMyFrame1::StdSort, this);
+		break;
+
+	case QUICK_SORT: // 7
+		_bgThread = std::jthread(&GUIMyFrame1::QuickSort, this);
+		break;
+
+	case TIM_SORT: // 8
+		_bgThread = std::jthread(&GUIMyFrame1::TimSort, this);
+		break;
+
+	case SHELL_SORT: // 9
+		_bgThread = std::jthread(&GUIMyFrame1::ShellSort, this);
+		break;
+
+	case COCKTAIL_SHAKER_SORT: // 10
+		_bgThread = std::jthread(&GUIMyFrame1::CocktailShakerSort, this);
+		break;
+
+	case COMB_SORT: // 11
+		_bgThread = std::jthread(&GUIMyFrame1::CombSort, this);
+		break;
+
+	case GNOME_SORT: // 12
+		_bgThread = std::jthread(&GUIMyFrame1::GnomeSort, this);
+		break;
+
+	case ODD_EVEN_SORT: // 13
+		_bgThread = std::jthread(&GUIMyFrame1::OddEvenSort, this);
+		break;
+
+	case STRAND_SORT: // 14
+		_bgThread = std::jthread(&GUIMyFrame1::StrandSort, this);
+		break;
+
+	default:
+		break;
 	}
 
 	// detaching thread
-	if(worker.joinable())
-		worker.detach();
+	if(_bgThread.joinable())
+		_bgThread.detach();
 }
 
 void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
@@ -126,76 +144,92 @@ void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
 	
 }
 
-void GUIMyFrame1::m_button_PauseOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_PauseOnButtonClick
-}
 
 void GUIMyFrame1::m_button_StopOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_StopOnButtonClick
+	std::stop_token st = _bgThread.get_stop_token();
+	std::stop_callback sc(st, [this] { UpdateTab(); });
+
+	_bgThread.request_stop();
 }
 
-void GUIMyFrame1::m_button_ResetOnButtonClick(wxCommandEvent& event)
-{
-	// TODO: Implement m_button_ResetOnButtonClick
-}
 
 void GUIMyFrame1::UpdateTab()
 {
 	_tab.clear();
 
-	int TabSize = m_slider_Num_of_Elem->GetValue();
+	int tabSize = m_slider_Num_of_Elem->GetValue();
 	
 	// https://en.cppreference.com/w/cpp/algorithm/random_shuffle
 	std::random_device rd;
 	std::mt19937 g(rd());
 	//
-	std::uniform_int_distribution<std::mt19937::result_type> distrTabSize(0, TabSize - 1); // returns number between 0 and (TabSize - 1)
+	std::uniform_int_distribution<std::mt19937::result_type> distrTabSize(0, tabSize - 1); // returns number between 0 and (TabSize - 1)
 	std::uniform_int_distribution<std::mt19937::result_type> distrCloseElement(0, 2); // return number between 0 and 3
 
-	if (m_shuffleType->GetSelection() == RANDOM_SHUFFLE) {
-		for (int i = 0; i < TabSize; i++)
+	switch (m_shuffleType->GetSelection())
+	{
+	case RANDOM_SHUFFLE:
+		{
+			for (int i = 0; i < tabSize; i++)
 				_tab.push_back(SortingElement(i + 1));
 
-		std::shuffle(_tab.begin(), _tab.end(), g);
-	}
-	else if (m_shuffleType->GetSelection() == NEARLY_SORTED) {
-		for (int i = 0; i < TabSize; i++)
-			_tab.push_back(SortingElement(i + 1));
-
-		for (int i = 0; i < TabSize; i++) {
-			int indx1 = distrTabSize(g); // random index of first element to swap
-			int indx2 = indx1 + distrCloseElement(g); // random index of second element to swap, not farther than value returned by distrCloseElement
-
-			while (indx2 < 0 || indx2 >= TabSize) indx2 = indx1 + distrCloseElement(g); // generate new index if previous is invalid
-
-			std::swap(_tab[indx1], _tab[indx2]); // swap two elements (they are close to each other)
+			std::shuffle(_tab.begin(), _tab.end(), g);
+			break;
 		}
-	}
-	else if (m_shuffleType->GetSelection() == MANY_DUPLICATES) {
-		// array FewUnique containing 6 numbers used later as values for _tab 
-		int FewUnique[] = {
-			// 5 random numbers in range from 1 to TabSize
-			static_cast<int>(distrTabSize(g) + 1),
-			static_cast<int>(distrTabSize(g) + 1),
-			static_cast<int>(distrTabSize(g) + 1),
-			static_cast<int>(distrTabSize(g) + 1),
-			static_cast<int>(distrTabSize(g) + 1),
-			// 1 maximal value so that elements are always displayed nicely (correct scale)
-			TabSize
-		};
-		std::uniform_int_distribution<std::mt19937::result_type> distrFewUnique(0, 5); // random index from 0 to 5 to get number from array FewUnique
-		for (int i = 0; i < TabSize; i++)
-			_tab.push_back(SortingElement(FewUnique[distrFewUnique(g)]));
-	}
-	else if (m_shuffleType->GetSelection() == DESCENDING_ORDER) {
-		for (int i = TabSize; i > 0; i--)
-			_tab.push_back(SortingElement(i));
-	}
-	else if (m_shuffleType->GetSelection() == ALREADY_SORTED) {
-		for (int i = 0; i < TabSize; i++)
-			_tab.push_back(SortingElement(i + 1));
+
+	case NEARLY_SORTED:
+		{
+			for (int i = 0; i < tabSize; i++)
+				_tab.push_back(SortingElement(i + 1));
+
+			for (int i = 0; i < tabSize; i++) {
+				int indx1 = distrTabSize(g); // random index of first element to swap
+				int indx2 = indx1 + distrCloseElement(g); // random index of second element to swap, not farther than value returned by distrCloseElement
+
+				while (indx2 < 0 || indx2 >= tabSize) indx2 = indx1 + distrCloseElement(g); // generate new index if previous is invalid
+
+				std::swap(_tab[indx1], _tab[indx2]); // swap two elements (they are close to each other)
+			}
+			break;
+		}
+
+	case MANY_DUPLICATES:
+		{
+			// array FewUnique containing 6 numbers used later as values for _tab 
+			int FewUnique[] = {
+				// 5 random numbers in range from 1 to TabSize
+				static_cast<int>(distrTabSize(g) + 1),
+				static_cast<int>(distrTabSize(g) + 1),
+				static_cast<int>(distrTabSize(g) + 1),
+				static_cast<int>(distrTabSize(g) + 1),
+				static_cast<int>(distrTabSize(g) + 1),
+				// 1 maximal value so that elements are always displayed nicely (correct scale)
+				tabSize
+			};
+			std::uniform_int_distribution<std::mt19937::result_type> distrFewUnique(0, 5); // random index from 0 to 5 to get number from array FewUnique
+			for (int i = 0; i < tabSize; i++)
+				_tab.push_back(SortingElement(FewUnique[distrFewUnique(g)]));
+			break;
+		}
+
+	case DESCENDING_ORDER:
+		{
+			for (int i = tabSize; i > 0; i--)
+				_tab.push_back(SortingElement(i));
+			break;
+		}
+
+	case ALREADY_SORTED:
+		{
+			for (int i = 0; i < tabSize; i++)
+				_tab.push_back(SortingElement(i + 1));
+			break;
+		}
+		
+	default:
+		break;
 	}
 }
 

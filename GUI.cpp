@@ -72,14 +72,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_button_Sort = new wxButton( this, wxID_ANY, wxT("Sort"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( m_button_Sort, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_button_Pause = new wxButton( this, wxID_ANY, wxT("Pause"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_button_Pause, 0, wxALIGN_CENTER|wxALL, 5 );
-
 	m_button_Stop = new wxButton( this, wxID_ANY, wxT("Stop"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer5->Add( m_button_Stop, 0, wxALIGN_CENTER|wxALL, 5 );
-
-	m_button_Reset = new wxButton( this, wxID_ANY, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer5->Add( m_button_Reset, 0, wxALIGN_CENTER|wxALL, 5 );
 
 	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("Delay time (ms)"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText4->Wrap( -1 );
@@ -120,9 +114,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_slider_Num_of_Elem->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_button_Shuffle->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ShuffleOnButtonClick ), NULL, this );
 	m_button_Sort->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_SortOnButtonClick ), NULL, this );
-	m_button_Pause->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
-	m_button_Reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
 	m_sliderDelay->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
 	m_sliderDelay->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
 	m_sliderDelay->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
@@ -152,9 +144,7 @@ MyFrame1::~MyFrame1()
 	m_slider_Num_of_Elem->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::m_slider_Num_of_ElemOnScroll ), NULL, this );
 	m_button_Shuffle->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ShuffleOnButtonClick ), NULL, this );
 	m_button_Sort->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_SortOnButtonClick ), NULL, this );
-	m_button_Pause->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_PauseOnButtonClick ), NULL, this );
 	m_button_Stop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_StopOnButtonClick ), NULL, this );
-	m_button_Reset->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_ResetOnButtonClick ), NULL, this );
 	m_sliderDelay->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
 	m_sliderDelay->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
 	m_sliderDelay->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::m_sliderDelayOnScroll ), NULL, this );
