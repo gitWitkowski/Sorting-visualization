@@ -149,7 +149,7 @@ void GUIMyFrame1::m_button_StopOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_StopOnButtonClick
 	std::stop_token st = _bgThread.get_stop_token();
-	std::stop_callback sc(st, [this] { UpdateTab(); });
+	std::stop_callback sc(st, [this] { /*DoDelay();*/ UpdateTab(); });
 
 	_bgThread.request_stop();
 }
@@ -239,9 +239,10 @@ int GUIMyFrame1::GetShift(int w) {
 }
 
 void GUIMyFrame1::BubbleSort() {
+	std::stop_token st = _bgThread.get_stop_token();
 	int size = _tab.size();
-	for (int i = 0; i < size - 1; i++) {
-		for (int j = 0; j < size - i - 1; j++) {
+	for (int i = 0; i < size - 1 && !st.stop_requested(); i++) {
+		for (int j = 0; j < size - i - 1 && !st.stop_requested(); j++) {
 			// set colors
 			_tab[j].setColorGreen();
 			_tab[j + 1].setColorBlue();
@@ -260,12 +261,13 @@ void GUIMyFrame1::BubbleSort() {
 }
 
 void GUIMyFrame1::InsertionSort() {
+	std::stop_token st = _bgThread.get_stop_token();
 	// https://en.wikipedia.org/wiki/Insertion_sort
 	
-	for (int i = 0; i < _tab.size(); i++) {
+	for (int i = 0; i < _tab.size() && !st.stop_requested(); i++) {
 		int j = i;
 		_tab[i].setColorBlue();
-		while (j > 0 && _tab[j-1] > _tab[j]) {
+		while (j > 0 && _tab[j-1] > _tab[j] && !st.stop_requested()) {
 			_tab[i].setColorBlue();
 			_tab[j].setColorRed();
 			_tab[j-1].setColorGreen();
@@ -283,11 +285,12 @@ void GUIMyFrame1::InsertionSort() {
 }
 
 void GUIMyFrame1::SelectionSort() {
-	for (int i = 0; i < _tab.size() - 1; i++) {
+	std::stop_token st = _bgThread.get_stop_token();
+	for (int i = 0; i < _tab.size() - 1 && !st.stop_requested(); i++) {
 		// find min element in _tab[i ... size - 1]
 			SortingElement* min = &_tab[i];
 			min->setColorGreen();
-			for (int j = i + 1; j < _tab.size(); j++) {
+			for (int j = i + 1; j < _tab.size() && !st.stop_requested(); j++) {
 				_tab[j].setColorRed();
 				DoDelay();
 				if (_tab[j] < *min) {
@@ -313,6 +316,7 @@ void GUIMyFrame1::SelectionSort() {
 
 // additional method to merge two sorted arrays into one 
 void GUIMyFrame1::Merge(int p, int q, int r) {
+	std::stop_token st = _bgThread.get_stop_token();
 	// https://www.programiz.com/dsa/merge-sort
 	// https://pl.wikipedia.org/wiki/Sortowanie_przez_scalanie
 
@@ -344,7 +348,7 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	int currentIndex = 0;
 
 	// merge left and right tab until one of them is empty
-	while (leftIndex < lNum && rightIndex < rNum) {
+	while (leftIndex < lNum && rightIndex < rNum && !st.stop_requested()) {
 		_tab[p + leftIndex].setColorRed();
 		_tab[q + 1 + rightIndex].setColorRed();
 
@@ -368,7 +372,7 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	}
 
 	// copy elements remaining only in left table
-	while (leftIndex < lNum) {
+	while (leftIndex < lNum && !st.stop_requested()) {
 		_tab[p + leftIndex].setColorGreen();
 		DoDelay();
 		temporaryTab[currentIndex] = tabLeft[leftIndex];
@@ -378,7 +382,7 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	}
 
 	// copy elements remaining only in right table
-	while (rightIndex < rNum) {
+	while (rightIndex < rNum && !st.stop_requested()) {
 		_tab[q + 1 + rightIndex].setColorGreen();
 		DoDelay();
 		temporaryTab[currentIndex] = tabRight[rightIndex];
@@ -388,7 +392,7 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 	}
 
 	// copy elements from temporaryTab to _tab and display the process (copied elements are drawn as blue)
-	for (int i = 0; i < (lNum + rNum); i++) {
+	for (int i = 0; i < (lNum + rNum) && !st.stop_requested(); i++) {
 		_tab[p + i] = temporaryTab[i];
 		_tab[p + i].setColorBlue();
 		DoDelay();
@@ -397,8 +401,9 @@ void GUIMyFrame1::Merge(int p, int q, int r) {
 }
 
 void GUIMyFrame1::MergeSort(int p, int r) { // p, r - beginning, end index
+	std::stop_token st = _bgThread.get_stop_token();
 	// check if array indexes are right
-	if (p >= r)
+	if (p >= r || st.stop_requested())
 		return;
 
 	int q = (p + r) / 2; // q - middle index
@@ -412,44 +417,53 @@ void GUIMyFrame1::MergeSort(int p, int r) { // p, r - beginning, end index
 }
 
 void GUIMyFrame1::InPlaceMergeSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::HeapSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::StdSort() {
-	std::sort(_tab.begin(), _tab.end(), [this](const SortingElement& o1, const SortingElement& o2) {
-		o1.setColorGreen();
-		o2.setColorBlue();
-		DoDelay();
-		o1.setColorWhite();
-		o2.setColorWhite();
-		return o1 < o2;
-	});
+	std::stop_token st = _bgThread.get_stop_token();
+	try {
+		std::sort(_tab.begin(), _tab.end(), [this, st](const SortingElement& o1, const SortingElement& o2) {
+			if (st.stop_requested()) 
+				throw std::exception();
+			else {
+				o1.setColorGreen();
+				o2.setColorBlue();
+				DoDelay();
+				o1.setColorWhite();
+				o2.setColorWhite();
+				return o1 < o2;
+			}
+		});
+	}catch(std::exception e){}
 }
 
 void GUIMyFrame1::QuickSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::TimSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::ShellSort() {
+	std::stop_token st = _bgThread.get_stop_token();
 	// https://en.wikipedia.org/wiki/Shellsort
 
 	// gaps sequence
 	int gaps[] = { 701, 301, 132, 57, 23, 10, 4, 1 };
 
 	for (int gap : gaps) {
+		if (st.stop_requested()) break;
 		// insertion sort for each gap from gaps tab
-		for (int i = gap; i < _tab.size(); i++) {
+		for (int i = gap; i < _tab.size() && !st.stop_requested(); i++) {
 			int j = i;
 			_tab[i].setColorBlue();
-			while (j>=gap && _tab[j - gap] > _tab[j]) {
+			while (j>=gap && _tab[j - gap] > _tab[j] && !st.stop_requested()) {
 				_tab[i].setColorBlue();
 				_tab[j].setColorRed();
 				_tab[j - gap].setColorGreen();
@@ -468,12 +482,13 @@ void GUIMyFrame1::ShellSort() {
 }
 
 void GUIMyFrame1::CocktailShakerSort() {
+	std::stop_token st = _bgThread.get_stop_token();
 	int bottom = 0;
 	int top = _tab.size() - 1;
 	bool swapped = true;
-	while (swapped) {
+	while (swapped && !st.stop_requested()) {
 		swapped = false;
-		for (int i = bottom; i < top; i++) {
+		for (int i = bottom; i < top && !st.stop_requested(); i++) {
 			_tab[i].setColorRed();
 			_tab[i+1].setColorGreen();
 			DoDelay();
@@ -486,7 +501,7 @@ void GUIMyFrame1::CocktailShakerSort() {
 			_tab[i+1].setColorWhite();
 		}
 		top--;
-		for (int i = top; i > bottom; i--) {
+		for (int i = top; i > bottom && !st.stop_requested(); i--) {
 			_tab[i].setColorRed();
 			_tab[i-1].setColorGreen();
 			DoDelay();
@@ -504,19 +519,19 @@ void GUIMyFrame1::CocktailShakerSort() {
 }
 
 void GUIMyFrame1::CombSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::GnomeSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::OddEvenSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 void GUIMyFrame1::StrandSort() {
-
+	std::stop_token st = _bgThread.get_stop_token();
 }
 
 
