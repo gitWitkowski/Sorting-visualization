@@ -420,8 +420,95 @@ void GUIMyFrame1::InPlaceMergeSort() {
 	std::stop_token st = _bgThread.get_stop_token();
 }
 
+int GUIMyFrame1::parentNode(int i) {
+	return floor((i-1) / 2);
+}
+
+int GUIMyFrame1::leftChildNode(int i) {
+	return 2 * i + 1;
+}
+
+int GUIMyFrame1::rightChildNode(int i) {
+	return 2 * i + 2;
+}
+
+void GUIMyFrame1::heapify() {
+	std::stop_token st = _bgThread.get_stop_token();
+
+	int start = parentNode(_tab.size() - 1) + 1;
+
+	while (start > 0 && !st.stop_requested()) {
+		start--;
+		siftDown(start, _tab.size());
+	}
+	for (auto& elem : _tab) {
+		if (st.stop_requested()) return;
+		elem.setColorGreen();
+		DoDelay();
+	}
+}
+
+void GUIMyFrame1::siftDown(int root, int end) {
+	std::stop_token st = _bgThread.get_stop_token();
+
+	while (leftChildNode(root) < end && !st.stop_requested()) {
+		int child = leftChildNode(root);
+
+		if (child + 1 < end && _tab[child] < _tab[child + 1])
+			child++;
+
+		_tab[root].setColorBlue();
+		_tab[child].setColorRed();
+		if (_tab[root] < _tab[child]) {
+			DoDelay();
+			std::swap(_tab[root], _tab[child]);
+			_tab[root].setColorRed();
+			_tab[child].setColorBlue();
+			DoDelay();
+			if (end == _tab.size()) {
+				_tab[root].setColorWhite();
+				_tab[child].setColorWhite();
+			}
+			else {
+				_tab[root].setColorGreen();
+				_tab[child].setColorGreen();
+			}
+			root = child;
+		}
+		else {
+			if (end == _tab.size()) {
+				_tab[root].setColorWhite();
+				_tab[child].setColorWhite();
+			}
+			else {
+				_tab[root].setColorGreen();
+				_tab[child].setColorGreen();
+			}
+			return;
+		}
+	}
+}
+
 void GUIMyFrame1::HeapSort() {
 	std::stop_token st = _bgThread.get_stop_token();
+
+	heapify();
+
+	int end = _tab.size();
+
+	while (end > 1 && !st.stop_requested()) {
+		end--;
+		_tab[end].setColorBlue();
+		_tab[0].setColorRed();
+		DoDelay();
+		std::swap(_tab[end], _tab[0]);
+		_tab[end].setColorRed();
+		_tab[0].setColorBlue();
+		DoDelay();
+		_tab[end].setColorWhite();
+		_tab[0].setColorWhite();
+		siftDown(0, end);
+	}
 }
 
 void GUIMyFrame1::StdSort() {
@@ -542,12 +629,12 @@ void GUIMyFrame1::m_sliderDelayOnScroll(wxScrollEvent& event) {
 	double minp = 0;
 	double maxp = 50;
 
-	double minv = std::log(1);
-	double maxv = std::log(10000000);
+	double minv = std::log(100);
+	double maxv = std::log(1'000'000);
 
 	double scale = (maxv - minv) / (maxp - minp);
 
-	_delayTimeInUs = std::exp(minv + scale * (static_cast<double>(m_sliderDelay->GetValue()) - minp))/10;
+	_delayTimeInUs = std::exp(minv + scale * (static_cast<double>(m_sliderDelay->GetValue()) - minp));
 }
 
 void GUIMyFrame1::m_TimerOnTimer(wxTimerEvent& event) {
@@ -557,7 +644,7 @@ void GUIMyFrame1::m_TimerOnTimer(wxTimerEvent& event) {
 	// https://stackoverflow.com/questions/29200635/convert-float-to-string-with-precision-number-of-decimal-digits-specified
 	double temp = _delayTimeInUs / 1000; // us => ms (?)
 	std::stringstream stream;
-	stream << std::fixed << std::setprecision(4) << temp;
+	stream << std::fixed << std::setprecision(2) << temp;
 	std::string s = stream.str();
 
 	m_staticTextDelay->SetLabel(s);

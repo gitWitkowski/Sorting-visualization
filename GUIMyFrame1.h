@@ -63,6 +63,11 @@ class GUIMyFrame1 : public MyFrame1
 		void MergeSort(int, int);
 		void InPlaceMergeSort();
 		void HeapSort();
+		void heapify();
+		void siftDown(int, int);
+		int parentNode(int);
+		int leftChildNode(int);
+		int rightChildNode(int);
 		void StdSort();
 		void QuickSort();
 		void TimSort();
