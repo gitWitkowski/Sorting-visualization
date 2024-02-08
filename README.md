@@ -17,3 +17,7 @@ This project was built in my free time to practise programming skills and refres
 
 
 ![alt text](https://github.com/gitWitkowski/Sorting-visualization/blob/main/Demo/start_gui.jpg)
+
+
+https://github.com/gitWitkowski/Sorting-visualization/assets/73957636/44d4496a-3d62-420f-ac47-3efb8251e1f6
+
