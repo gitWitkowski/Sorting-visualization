@@ -14,6 +14,6 @@ This project was built in my free time to practise programming skills and refres
 
 ### Short project description
 
-
+https://github.com/gitWitkowski/Sorting-visualization/blob/main/Demo/demo.mp4
 
 ![alt text](https://github.com/gitWitkowski/Sorting-visualization/blob/main/Demo/start_gui.jpg)
