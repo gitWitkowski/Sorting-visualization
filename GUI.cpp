@@ -47,7 +47,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 
-	wxString m_choice_SortTypeChoices[] = { wxT("BUBBLE SORT"), wxT("INSERTION SORT"), wxT("SELECTION SORT"), wxT("MERGE SORT"), wxT("IN-PLACE MERGE SORT"), wxT("HEAP SORT"), wxT("STD::SORT"), wxT("QUICK SORT"), wxT("TIM SORT"), wxT("SHELL SORT"), wxT("COCKTAIL SHAKER SORT"), wxT("COMB SORT"), wxT("GNOME SORT"), wxT("ODD EVEN SORT"), wxT("STRAND SORT") };
+	wxString m_choice_SortTypeChoices[] = { wxT("BUBBLE SORT"), wxT("INSERTION SORT"), wxT("SELECTION SORT"), wxT("MERGE SORT"), wxT("HEAP SORT"), wxT("STD::SORT"), wxT("QUICK SORT PARTITION HOARE"), wxT("QUICK SORT PARTITION LOMUTO"), wxT("TIM SORT"), wxT("SHELL SORT"), wxT("COCKTAIL SHAKER SORT"), wxT("COMB SORT"), wxT("GNOME SORT"), wxT("ODD EVEN SORT"), wxT("STRAND SORT") };
 	int m_choice_SortTypeNChoices = sizeof( m_choice_SortTypeChoices ) / sizeof( wxString );
 	m_choice_SortType = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice_SortTypeNChoices, m_choice_SortTypeChoices, 0 );
 	m_choice_SortType->SetSelection( 0 );
