@@ -34,81 +34,84 @@ wxDECLARE_APP(MyApp);
 /** Implementing MyFrame1 */
 class GUIMyFrame1 : public MyFrame1
 {
-	protected:
-		// Handlers for MyFrame1 events.
-		void drawPanelOnPaint( wxPaintEvent& event );
-		void drawPanelOnSize( wxSizeEvent& event );
-		void m_choice_SortTypeOnChoice( wxCommandEvent& event );
-		void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event );
-		void m_button_SortOnButtonClick( wxCommandEvent& event );
-		void m_button_ShuffleOnButtonClick( wxCommandEvent& event );
-		void m_button_StopOnButtonClick( wxCommandEvent& event );
-		void m_sliderDelayOnScroll(wxScrollEvent& event);
-		void m_TimerOnTimer( wxTimerEvent& event );
-	public:
-		/** Constructor */
-		GUIMyFrame1( wxWindow* parent );
+protected:
+	// Handlers for MyFrame1 events.
+	void drawPanelOnPaint( wxPaintEvent& event );
+	void drawPanelOnSize( wxSizeEvent& event );
+	void m_choice_SortTypeOnChoice( wxCommandEvent& event );
+	void m_slider_Num_of_ElemOnScroll( wxScrollEvent& event );
+	void m_button_SortOnButtonClick( wxCommandEvent& event );
+	void m_button_ShuffleOnButtonClick( wxCommandEvent& event );
+	void m_button_StopOnButtonClick( wxCommandEvent& event );
+	void m_sliderDelayOnScroll(wxScrollEvent& event);
+	void m_TimerOnTimer( wxTimerEvent& event );
+public:
+	/** Constructor */
+	GUIMyFrame1( wxWindow* parent );
 	//// end generated class members
-		void UpdateTab();
-		int GetShift(int); // return number of pixels from left side of the DrawPanel
-		void DisableButtons();
-		void EnableButtons();
-		void DoDelay();
+	void UpdateTab();
+	int GetShift(int); // return number of pixels from left side of the DrawPanel
+	void DisableButtons();
+	void EnableButtons();
+	void DoDelay();
 
-		/// sorting methods
-		void BubbleSort();
-		void InsertionSort();
-		void SelectionSort();
-		void Merge(int, int, int);
-		void MergeSort(int, int);
-		void InPlaceMergeSort();
-		void HeapSort();
-		void heapify();
-		void siftDown(int, int);
-		int parentNode(int);
-		int leftChildNode(int);
-		int rightChildNode(int);
-		void StdSort();
-		void QuickSort();
-		void TimSort();
-		void ShellSort();
-		void CocktailShakerSort();
-		void CombSort();
-		void GnomeSort();
-		void OddEvenSort();
-		void StrandSort();
+	/// sorting methods
+	void BubbleSort();
+	void InsertionSort();
+	void SelectionSort();
+	void Merge(int, int, int);
+	void MergeSort(int, int);
+	void InPlaceMergeSort();
+	void HeapSort();
+	void heapify();
+	void siftDown(int, int);
+	int parentNode(int);
+	int leftChildNode(int);
+	int rightChildNode(int);
+	void StdSort();
+	void QuickSortHoare(int, int);
+	void QuickSortLomuto(int, int);
+	int partitionHoare(int, int);
+	int partitionLomuto(int, int);
+	void TimSort();
+	void ShellSort();
+	void CocktailShakerSort();
+	void CombSort();
+	void GnomeSort();
+	void OddEvenSort();
+	void StrandSort();
 
-		std::vector<SortingElement> _tab;
-		int _maxElemValue;
-		double _delayTimeInUs;
-		int _comparisonsNumber;
-		std::jthread _bgThread;
+	std::vector<SortingElement> _tab;
+	int _maxElemValue;
+	double _delayTimeInUs;
+	int _comparisonsNumber;
+	std::jthread _bgThread;
 
-		enum sortingType {
-			BUBBLE_SORT = 0,		// 0
-			INSERTION_SORT,			// 1
-			SELECTION_SORT,			// 2
-			MERGE_SORT,				// 3
-			IN_PLACE_MERGE_SORT,	// 4
-			HEAP_SORT,				// 5
-			STD_SORT,				// 6
-			QUICK_SORT,				// 7
-			TIM_SORT,				// 8
-			SHELL_SORT,				// 9
-			COCKTAIL_SHAKER_SORT,	// 10
-			COMB_SORT,				// 11
-			GNOME_SORT,				// 12
-			ODD_EVEN_SORT,			// 13
-			STRAND_SORT				// 14
-		};
+	enum sortingType {
+		BUBBLE_SORT = 0,		// 0
+		INSERTION_SORT,			// 1
+		SELECTION_SORT,			// 2
+		MERGE_SORT,				// 3
+		HEAP_SORT,				// 4
+		STD_SORT,				// 5
+		QUICK_SORT_HOARE,		// 6
+		QUICK_SORT_LOMUTO,		// 7
+		TIM_SORT,				// 8
+		SHELL_SORT,				// 9
+		COCKTAIL_SHAKER_SORT,	// 10
+		COMB_SORT,				// 11
+		GNOME_SORT,				// 12
+		ODD_EVEN_SORT,			// 13
+		STRAND_SORT				// 14
+	};
 
-		enum shiffleType {
-			RANDOM_SHUFFLE = 0,
-			NEARLY_SORTED,
-			MANY_DUPLICATES,
-			DESCENDING_ORDER,
-			ALREADY_SORTED
-		};
+	enum shiffleType {
+		RANDOM_SHUFFLE = 0,
+		NEARLY_SORTED,
+		MANY_DUPLICATES,
+		DESCENDING_ORDER,
+		ALREADY_SORTED
+	};
 
 
 

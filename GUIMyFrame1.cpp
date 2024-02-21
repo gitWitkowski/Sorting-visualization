@@ -52,7 +52,7 @@ void GUIMyFrame1::drawPanelOnPaint(wxPaintEvent& event)
 void GUIMyFrame1::m_choice_SortTypeOnChoice(wxCommandEvent& event)
 {
 	// TODO: Implement m_choice_SortTypeOnChoice
-	
+
 }
 
 void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
@@ -65,7 +65,7 @@ void GUIMyFrame1::m_slider_Num_of_ElemOnScroll(wxScrollEvent& event)
 void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
-	
+
 	switch (m_choice_SortType->GetSelection())
 	{
 	case BUBBLE_SORT: // 0
@@ -84,20 +84,20 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 		_bgThread = std::jthread(&GUIMyFrame1::MergeSort, this, 0, _tab.size() - 1);
 		break;
 
-	case IN_PLACE_MERGE_SORT: // 4
-		_bgThread = std::jthread(&GUIMyFrame1::InPlaceMergeSort, this);
-		break;
-
-	case HEAP_SORT: // 5
+	case HEAP_SORT: // 4
 		_bgThread = std::jthread(&GUIMyFrame1::HeapSort, this);
 		break;
 
-	case STD_SORT: // 6
+	case STD_SORT: // 5
 		_bgThread = std::jthread(&GUIMyFrame1::StdSort, this);
 		break;
 
-	case QUICK_SORT: // 7
-		_bgThread = std::jthread(&GUIMyFrame1::QuickSort, this);
+	case QUICK_SORT_HOARE: // 6
+		_bgThread = std::jthread(&GUIMyFrame1::QuickSortHoare, this, 0, _tab.size() - 1);
+		break;
+
+	case QUICK_SORT_LOMUTO: // 7
+		_bgThread = std::jthread(&GUIMyFrame1::QuickSortLomuto, this, 0, _tab.size() - 1);
 		break;
 
 	case TIM_SORT: // 8
@@ -141,7 +141,7 @@ void GUIMyFrame1::m_button_ShuffleOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_ShuffleOnButtonClick
 	UpdateTab();
-	
+
 }
 
 
@@ -160,7 +160,7 @@ void GUIMyFrame1::UpdateTab()
 	_tab.clear();
 
 	int tabSize = m_slider_Num_of_Elem->GetValue();
-	
+
 	// https://en.cppreference.com/w/cpp/algorithm/random_shuffle
 	std::random_device rd;
 	std::mt19937 g(rd());
@@ -171,63 +171,63 @@ void GUIMyFrame1::UpdateTab()
 	switch (m_shuffleType->GetSelection())
 	{
 	case RANDOM_SHUFFLE:
-		{
-			for (int i = 0; i < tabSize; i++)
-				_tab.push_back(SortingElement(i + 1));
+	{
+		for (int i = 0; i < tabSize; i++)
+			_tab.push_back(SortingElement(i + 1));
 
-			std::shuffle(_tab.begin(), _tab.end(), g);
-			break;
-		}
+		std::shuffle(_tab.begin(), _tab.end(), g);
+		break;
+	}
 
 	case NEARLY_SORTED:
-		{
-			for (int i = 0; i < tabSize; i++)
-				_tab.push_back(SortingElement(i + 1));
+	{
+		for (int i = 0; i < tabSize; i++)
+			_tab.push_back(SortingElement(i + 1));
 
-			for (int i = 0; i < tabSize; i++) {
-				int indx1 = distrTabSize(g); // random index of first element to swap
-				int indx2 = indx1 + distrCloseElement(g); // random index of second element to swap, not farther than value returned by distrCloseElement
+		for (int i = 0; i < tabSize; i++) {
+			int indx1 = distrTabSize(g); // random index of first element to swap
+			int indx2 = indx1 + distrCloseElement(g); // random index of second element to swap, not farther than value returned by distrCloseElement
 
-				while (indx2 < 0 || indx2 >= tabSize) indx2 = indx1 + distrCloseElement(g); // generate new index if previous is invalid
+			while (indx2 < 0 || indx2 >= tabSize) indx2 = indx1 + distrCloseElement(g); // generate new index if previous is invalid
 
-				std::swap(_tab[indx1], _tab[indx2]); // swap two elements (they are close to each other)
-			}
-			break;
+			std::swap(_tab[indx1], _tab[indx2]); // swap two elements (they are close to each other)
 		}
+		break;
+	}
 
 	case MANY_DUPLICATES:
-		{
-			// array FewUnique containing 6 numbers used later as values for _tab 
-			int FewUnique[] = {
-				// 5 random numbers in range from 1 to TabSize
-				static_cast<int>(distrTabSize(g) + 1),
-				static_cast<int>(distrTabSize(g) + 1),
-				static_cast<int>(distrTabSize(g) + 1),
-				static_cast<int>(distrTabSize(g) + 1),
-				static_cast<int>(distrTabSize(g) + 1),
-				// 1 maximal value so that elements are always displayed nicely (correct scale)
-				tabSize
-			};
-			std::uniform_int_distribution<std::mt19937::result_type> distrFewUnique(0, 5); // random index from 0 to 5 to get number from array FewUnique
-			for (int i = 0; i < tabSize; i++)
-				_tab.push_back(SortingElement(FewUnique[distrFewUnique(g)]));
-			break;
-		}
+	{
+		// array FewUnique containing 6 numbers used later as values for _tab 
+		int FewUnique[] = {
+			// 5 random numbers in range from 1 to TabSize
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			static_cast<int>(distrTabSize(g) + 1),
+			// 1 maximal value so that elements are always displayed nicely (correct scale)
+			tabSize
+		};
+		std::uniform_int_distribution<std::mt19937::result_type> distrFewUnique(0, 5); // random index from 0 to 5 to get number from array FewUnique
+		for (int i = 0; i < tabSize; i++)
+			_tab.push_back(SortingElement(FewUnique[distrFewUnique(g)]));
+		break;
+	}
 
 	case DESCENDING_ORDER:
-		{
-			for (int i = tabSize; i > 0; i--)
-				_tab.push_back(SortingElement(i));
-			break;
-		}
+	{
+		for (int i = tabSize; i > 0; i--)
+			_tab.push_back(SortingElement(i));
+		break;
+	}
 
 	case ALREADY_SORTED:
-		{
-			for (int i = 0; i < tabSize; i++)
-				_tab.push_back(SortingElement(i + 1));
-			break;
-		}
-		
+	{
+		for (int i = 0; i < tabSize; i++)
+			_tab.push_back(SortingElement(i + 1));
+		break;
+	}
+
 	default:
 		break;
 	}
@@ -263,7 +263,7 @@ void GUIMyFrame1::BubbleSort() {
 void GUIMyFrame1::InsertionSort() {
 	std::stop_token st = _bgThread.get_stop_token();
 	// https://en.wikipedia.org/wiki/Insertion_sort
-	
+
 	for (int i = 0; i < _tab.size() && !st.stop_requested(); i++) {
 		int j = i;
 		_tab[i].setColorBlue();
@@ -288,20 +288,20 @@ void GUIMyFrame1::SelectionSort() {
 	std::stop_token st = _bgThread.get_stop_token();
 	for (int i = 0; i < _tab.size() - 1 && !st.stop_requested(); i++) {
 		// find min element in _tab[i ... size - 1]
-			SortingElement* min = &_tab[i];
-			min->setColorGreen();
-			for (int j = i + 1; j < _tab.size() && !st.stop_requested(); j++) {
-				_tab[j].setColorRed();
-				DoDelay();
-				if (_tab[j] < *min) {
-					min->setColorWhite();
-					min = &_tab[j];
-					min->setColorGreen();
-				}
-				else {
-					_tab[j].setColorWhite();
-				}
+		SortingElement* min = &_tab[i];
+		min->setColorGreen();
+		for (int j = i + 1; j < _tab.size() && !st.stop_requested(); j++) {
+			_tab[j].setColorRed();
+			DoDelay();
+			if (_tab[j] < *min) {
+				min->setColorWhite();
+				min = &_tab[j];
+				min->setColorGreen();
 			}
+			else {
+				_tab[j].setColorWhite();
+			}
+		}
 		//
 		_tab[i].setColorRed();
 		DoDelay();
@@ -407,7 +407,7 @@ void GUIMyFrame1::MergeSort(int p, int r) { // p, r - beginning, end index
 		return;
 
 	int q = (p + r) / 2; // q - middle index
-	
+
 	// sort left part recursively
 	MergeSort(p, q);
 	// sort right part recursivelly
@@ -515,7 +515,7 @@ void GUIMyFrame1::StdSort() {
 	std::stop_token st = _bgThread.get_stop_token();
 	try {
 		std::sort(_tab.begin(), _tab.end(), [this, st](const SortingElement& o1, const SortingElement& o2) {
-			if (st.stop_requested()) 
+			if (st.stop_requested())
 				throw std::exception();
 			else {
 				o1.setColorGreen();
@@ -525,12 +525,146 @@ void GUIMyFrame1::StdSort() {
 				o2.setColorWhite();
 				return o1 < o2;
 			}
-		});
-	}catch(std::exception e){}
+			});
+	}
+	catch (std::exception e) {}
 }
 
-void GUIMyFrame1::QuickSort() {
+void GUIMyFrame1::QuickSortLomuto(int lo, int hi) {
 	std::stop_token st = _bgThread.get_stop_token();
+
+	if (lo >= hi || lo < 0 || st.stop_requested())
+		return;
+
+	// Partition array and get the pivot index
+	int p = partitionLomuto(lo, hi);
+
+	// Sort the two partitions
+	if (!st.stop_requested()) {
+		QuickSortLomuto(lo, p - 1); // Left side of pivot
+		QuickSortLomuto(p + 1, hi); // Right side of pivot
+	}
+}
+
+int GUIMyFrame1::partitionLomuto(int lo, int hi) {
+	std::stop_token st = _bgThread.get_stop_token();
+
+	SortingElement& pivot = _tab[hi]; // Choose the last element as the pivot
+
+	pivot.setColorRed();
+
+	// Temporary pivot index
+	int i = lo - 1; 
+
+	for (int j = lo; j <= hi - 1 && !st.stop_requested(); j++) {
+		_tab[j].setColorGreen();
+		if (i > lo - 1) _tab[i].setColorBlue();
+		DoDelay();
+
+		// If the current element is less than or equal to the pivot
+		if (_tab[j] <= pivot && !st.stop_requested()) {
+			if (i > lo - 1) _tab[i].setColorWhite();
+			// Move the temporary pivot index forward
+			i++;
+			_tab[i].setColorBlue();
+			DoDelay();
+			_tab[i].setColorOrange();
+			_tab[j].setColorOrange();
+			DoDelay();
+			// Swap the current element with the element at the temporary pivot index
+			std::swap(_tab[i], _tab[j]);
+			DoDelay();
+			_tab[i].setColorBlue();
+			_tab[j].setColorGreen();
+			DoDelay();
+		}
+		_tab[j].setColorWhite();
+	}
+
+	// Move the pivot element to the correct pivot position (between the smaller and larger elements)
+	i++;
+	if (!st.stop_requested()) {
+		DoDelay();
+		_tab[i].setColorOrange();
+		pivot.setColorOrange();
+		DoDelay();
+		std::swap(_tab[i], pivot);
+		DoDelay();
+	}
+	_tab[i].setColorWhite();
+	pivot.setColorWhite();
+	_tab[lo].setColorWhite();
+
+	return i; // the pivot index
+}
+
+void GUIMyFrame1::QuickSortHoare(int lo, int hi) {
+	std::stop_token st = _bgThread.get_stop_token();
+
+	if (lo >= 0 && hi >= 0 && lo < hi && !st.stop_requested()) {
+		int p = partitionHoare(lo, hi);
+		QuickSortHoare(lo, p); // Note: the pivot is now included
+		QuickSortHoare(p + 1, hi);
+	}
+}
+
+int GUIMyFrame1::partitionHoare(int lo, int hi) {
+	std::stop_token st = _bgThread.get_stop_token();
+
+	// Pivot value
+	SortingElement& pivot = _tab[lo]; // Choose the first element as the pivot
+
+	pivot.setColorRed();
+
+	// Left index
+	int i = lo - 1;
+
+	// Right index
+	int j = hi + 1;
+
+	while (!st.stop_requested()) {
+		// Move the left index to the right at least once and while the element at
+		// the left index is less than the pivot
+		do {
+			if(i>lo-1) _tab[i].setColorWhite();
+			i++;
+			_tab[i].setColorGreen();
+			pivot.setColorRed();
+			DoDelay();
+			_tab[i].setColorWhite();
+			pivot.setColorRed();
+		} while (_tab[i] < pivot && !st.stop_requested());
+		_tab[i].setColorGreen();
+
+		// Move the right index to the left at least once and while the element at
+		// the right index is greater than the pivot
+		do {
+			if(j<hi+1) _tab[j].setColorWhite();
+			j--;
+			_tab[j].setColorBlue();
+			pivot.setColorRed();
+			DoDelay();
+			_tab[j].setColorWhite();
+			pivot.setColorRed();
+		} while (_tab[j] > pivot && !st.stop_requested());
+
+		_tab[j].setColorBlue();
+
+		// If the indices crossed, return
+		if (i >= j || st.stop_requested()) {
+			pivot.setColorWhite();
+			_tab[i].setColorWhite();
+			_tab[j].setColorWhite();
+			return j;
+		}
+
+		// Swap the elements at the left and right indices
+		_tab[i].setColorGreen();
+		_tab[j].setColorBlue();
+		DoDelay();
+		std::swap(_tab[i], _tab[j]);
+		DoDelay();
+	}
 }
 
 void GUIMyFrame1::TimSort() {
@@ -550,7 +684,7 @@ void GUIMyFrame1::ShellSort() {
 		for (int i = gap; i < _tab.size() && !st.stop_requested(); i++) {
 			int j = i;
 			_tab[i].setColorBlue();
-			while (j>=gap && _tab[j - gap] > _tab[j] && !st.stop_requested()) {
+			while (j >= gap && _tab[j - gap] > _tab[j] && !st.stop_requested()) {
 				_tab[i].setColorBlue();
 				_tab[j].setColorRed();
 				_tab[j - gap].setColorGreen();
@@ -561,7 +695,7 @@ void GUIMyFrame1::ShellSort() {
 				DoDelay();
 				_tab[j].setColorWhite();
 				_tab[j - gap].setColorWhite();
-				j-=gap;
+				j -= gap;
 			}
 			_tab[i].setColorWhite();
 		}
@@ -577,7 +711,7 @@ void GUIMyFrame1::CocktailShakerSort() {
 		swapped = false;
 		for (int i = bottom; i < top && !st.stop_requested(); i++) {
 			_tab[i].setColorRed();
-			_tab[i+1].setColorGreen();
+			_tab[i + 1].setColorGreen();
 			DoDelay();
 			if (_tab[i] > _tab[i + 1]) {
 				std::swap(_tab[i], _tab[i + 1]);
@@ -585,12 +719,12 @@ void GUIMyFrame1::CocktailShakerSort() {
 				DoDelay();
 			}
 			_tab[i].setColorWhite();
-			_tab[i+1].setColorWhite();
+			_tab[i + 1].setColorWhite();
 		}
 		top--;
 		for (int i = top; i > bottom && !st.stop_requested(); i--) {
 			_tab[i].setColorRed();
-			_tab[i-1].setColorGreen();
+			_tab[i - 1].setColorGreen();
 			DoDelay();
 			if (_tab[i] < _tab[i - 1]) {
 				std::swap(_tab[i], _tab[i - 1]);
@@ -598,7 +732,7 @@ void GUIMyFrame1::CocktailShakerSort() {
 				DoDelay();
 			}
 			_tab[i].setColorWhite();
-			_tab[i-1].setColorWhite();
+			_tab[i - 1].setColorWhite();
 		}
 		bottom++;
 	}
@@ -625,7 +759,7 @@ void GUIMyFrame1::StrandSort() {
 void GUIMyFrame1::m_sliderDelayOnScroll(wxScrollEvent& event) {
 	// calculations from:
 	// https://stackoverflow.com/questions/846221/logarithmic-slider
-	
+
 	double minp = 0;
 	double maxp = 50;
 
