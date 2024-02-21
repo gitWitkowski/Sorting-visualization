@@ -547,6 +547,8 @@ void GUIMyFrame1::QuickSortLomuto(int lo, int hi) {
 }
 
 int GUIMyFrame1::partitionLomuto(int lo, int hi) {
+	// https://en.wikipedia.org/wiki/Quicksort
+
 	std::stop_token st = _bgThread.get_stop_token();
 
 	SortingElement& pivot = _tab[hi]; // Choose the last element as the pivot
@@ -609,6 +611,8 @@ void GUIMyFrame1::QuickSortHoare(int lo, int hi) {
 }
 
 int GUIMyFrame1::partitionHoare(int lo, int hi) {
+	// https://en.wikipedia.org/wiki/Quicksort
+
 	std::stop_token st = _bgThread.get_stop_token();
 
 	// Pivot value
@@ -748,7 +752,42 @@ void GUIMyFrame1::GnomeSort() {
 }
 
 void GUIMyFrame1::OddEvenSort() {
+	// https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort
+
 	std::stop_token st = _bgThread.get_stop_token();
+
+	bool sorted = false;
+	while (!sorted && !st.stop_requested()) {
+		sorted = true;
+		for (int i = 1; i < _tab.size() - 1 && !st.stop_requested(); i += 2) {
+			_tab[i].setColorRed();
+			_tab[i + 1].setColorGreen();
+			DoDelay();
+
+			if (_tab[i] > _tab[i + 1]) {
+				std::swap(_tab[i], _tab[i+1]);
+				sorted = false;
+				DoDelay();
+			}
+
+			_tab[i].setColorWhite();
+			_tab[i + 1].setColorWhite();
+		}
+		for (int i = 0; i < _tab.size() - 1 && !st.stop_requested(); i += 2) {
+			_tab[i].setColorBlue();
+			_tab[i + 1].setColorYellow();
+			DoDelay();
+
+			if (_tab[i] > _tab[i + 1]) {
+				std::swap(_tab[i], _tab[i + 1]);
+				sorted = false;
+				DoDelay();
+			}
+
+			_tab[i].setColorWhite();
+			_tab[i + 1].setColorWhite();
+		}
+	}
 }
 
 void GUIMyFrame1::StrandSort() {
