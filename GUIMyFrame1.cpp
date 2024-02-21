@@ -100,32 +100,16 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 		_bgThread = std::jthread(&GUIMyFrame1::QuickSortLomuto, this, 0, _tab.size() - 1);
 		break;
 
-	case TIM_SORT: // 8
-		_bgThread = std::jthread(&GUIMyFrame1::TimSort, this);
-		break;
-
-	case SHELL_SORT: // 9
+	case SHELL_SORT: // 8
 		_bgThread = std::jthread(&GUIMyFrame1::ShellSort, this);
 		break;
 
-	case COCKTAIL_SHAKER_SORT: // 10
+	case COCKTAIL_SHAKER_SORT: // 9
 		_bgThread = std::jthread(&GUIMyFrame1::CocktailShakerSort, this);
 		break;
 
-	case COMB_SORT: // 11
-		_bgThread = std::jthread(&GUIMyFrame1::CombSort, this);
-		break;
-
-	case GNOME_SORT: // 12
-		_bgThread = std::jthread(&GUIMyFrame1::GnomeSort, this);
-		break;
-
-	case ODD_EVEN_SORT: // 13
+	case ODD_EVEN_SORT: // 10
 		_bgThread = std::jthread(&GUIMyFrame1::OddEvenSort, this);
-		break;
-
-	case STRAND_SORT: // 14
-		_bgThread = std::jthread(&GUIMyFrame1::StrandSort, this);
 		break;
 
 	default:

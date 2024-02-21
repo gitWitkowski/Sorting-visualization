@@ -96,13 +96,9 @@ public:
 		STD_SORT,				// 5
 		QUICK_SORT_HOARE,		// 6
 		QUICK_SORT_LOMUTO,		// 7
-		TIM_SORT,				// 8
-		SHELL_SORT,				// 9
-		COCKTAIL_SHAKER_SORT,	// 10
-		COMB_SORT,				// 11
-		GNOME_SORT,				// 12
-		ODD_EVEN_SORT,			// 13
-		STRAND_SORT				// 14
+		SHELL_SORT,				// 8
+		COCKTAIL_SHAKER_SORT,	// 9
+		ODD_EVEN_SORT,			// 10
 	};
 
 	enum shiffleType {
