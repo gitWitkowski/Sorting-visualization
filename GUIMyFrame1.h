@@ -51,8 +51,6 @@ public:
 	//// end generated class members
 	void UpdateTab();
 	int GetShift(int); // return number of pixels from left side of the DrawPanel
-	void DisableButtons();
-	void EnableButtons();
 	void DoDelay();
 	void ControlsOnStart();
 	void ControlsOnStop();
@@ -81,7 +79,6 @@ public:
 	std::vector<SortingElement> _tab;
 	int _maxElemValue;
 	double _delayTimeInUs;
-	int _comparisonsNumber;
 	std::jthread _bgThread;
 
 	enum sortingType {

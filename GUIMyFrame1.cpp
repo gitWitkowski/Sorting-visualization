@@ -2,9 +2,9 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{20}, _comparisonsNumber{0}
+	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{20}
 {
-	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
+	m_ComparisonsNum->SetLabel(std::to_string(SortingElement::comparisonNum));
 	UpdateTab();
 	// 60 fsp (1000 ms / 60 frames)
 	m_Timer.Start(1000 / 60);
@@ -231,6 +231,7 @@ void GUIMyFrame1::ControlsOnStart() {
 	m_button_Shuffle->Disable();
 	m_button_Sort->Disable();
 	m_button_Stop->Enable();
+	SortingElement::comparisonNum = 0;
 }
 
 void GUIMyFrame1::ControlsOnStop() {
@@ -807,7 +808,7 @@ void GUIMyFrame1::m_sliderDelayOnScroll(wxScrollEvent& event) {
 }
 
 void GUIMyFrame1::m_TimerOnTimer(wxTimerEvent& event) {
-	m_ComparisonsNum->SetLabel(std::to_string(_comparisonsNumber));
+	m_ComparisonsNum->SetLabel(std::to_string(SortingElement::comparisonNum));
 	drawPanel->Refresh(false);
 
 	// https://stackoverflow.com/questions/29200635/convert-float-to-string-with-precision-number-of-decimal-digits-specified
@@ -817,25 +818,6 @@ void GUIMyFrame1::m_TimerOnTimer(wxTimerEvent& event) {
 	std::string s = stream.str();
 
 	m_staticTextDelay->SetLabel(s);
-}
-
-void GUIMyFrame1::DisableButtons() {
-	// reset comparision number
-	_comparisonsNumber = 0;
-
-	m_choice_SortType->Disable();
-	m_slider_Num_of_Elem->Disable();
-	m_shuffleType->Disable();
-	m_button_Shuffle->Disable();
-	m_button_Sort->Disable();
-}
-
-void GUIMyFrame1::EnableButtons() {
-	m_choice_SortType->Enable();
-	m_slider_Num_of_Elem->Enable();
-	m_shuffleType->Enable();
-	m_button_Shuffle->Enable();
-	m_button_Sort->Enable();
 }
 
 void GUIMyFrame1::DoDelay() {

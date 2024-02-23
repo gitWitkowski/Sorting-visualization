@@ -19,4 +19,5 @@ struct SortingElement {
 
 	int _value;
 	mutable wxColor _color;
+	static int comparisonNum;
 };

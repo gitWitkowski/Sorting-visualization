@@ -5,18 +5,22 @@ SortingElement::SortingElement(int value, wxColor color) : _value{ value }, _col
 SortingElement::SortingElement(int value) : SortingElement{ value, wxColor(255,255,255) } {}
 
 bool SortingElement::operator<(const SortingElement& o) const {
+	comparisonNum++;
 	return _value < o._value;
 }
 
 bool SortingElement::operator>(const SortingElement& o) const {
+	comparisonNum++;
 	return _value > o._value;
 }
 
 bool SortingElement::operator<=(const SortingElement& o) const {
+	comparisonNum++;
 	return _value <= o._value;
 }
 
 bool SortingElement::operator>=(const SortingElement& o) const {
+	comparisonNum++;
 	return _value >= o._value;
 }
 
@@ -49,3 +53,5 @@ void SortingElement::setColorOrange() const {
 void SortingElement::setColorYellow() const {
 	_color = wxColor(255, 215, 0);
 }
+
+int SortingElement::comparisonNum = 0;
