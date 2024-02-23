@@ -8,6 +8,7 @@ GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	UpdateTab();
 	// 60 fsp (1000 ms / 60 frames)
 	m_Timer.Start(1000 / 60);
+	ControlsOnStop();
 }
 
 void GUIMyFrame1::drawPanelOnSize(wxSizeEvent& event)
@@ -66,6 +67,8 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_SortOnButtonClick
 
+	ControlsOnStart();
+
 	switch (m_choice_SortType->GetSelection())
 	{
 	case BUBBLE_SORT: // 0
@@ -113,6 +116,7 @@ void GUIMyFrame1::m_button_SortOnButtonClick(wxCommandEvent& event)
 		break;
 
 	default:
+		ControlsOnStop();
 		break;
 	}
 
@@ -133,7 +137,7 @@ void GUIMyFrame1::m_button_StopOnButtonClick(wxCommandEvent& event)
 {
 	// TODO: Implement m_button_StopOnButtonClick
 	std::stop_token st = _bgThread.get_stop_token();
-	std::stop_callback sc(st, [this] { /*DoDelay();*/ UpdateTab(); });
+	std::stop_callback sc(st, [this] { /*DoDelay();*/ UpdateTab(); ControlsOnStop(); });
 
 	_bgThread.request_stop();
 }
@@ -222,6 +226,20 @@ int GUIMyFrame1::GetShift(int w) {
 	return (w - AllElemWidth) / 2;
 }
 
+void GUIMyFrame1::ControlsOnStart() {
+	m_slider_Num_of_Elem->Disable();
+	m_button_Shuffle->Disable();
+	m_button_Sort->Disable();
+	m_button_Stop->Enable();
+}
+
+void GUIMyFrame1::ControlsOnStop() {
+	m_slider_Num_of_Elem->Enable();
+	m_button_Shuffle->Enable();
+	m_button_Sort->Enable();
+	m_button_Stop->Disable();
+}
+
 void GUIMyFrame1::BubbleSort() {
 	std::stop_token st = _bgThread.get_stop_token();
 	int size = _tab.size();
@@ -242,6 +260,7 @@ void GUIMyFrame1::BubbleSort() {
 			//
 		}
 	}
+	ControlsOnStop();
 }
 
 void GUIMyFrame1::InsertionSort() {
@@ -266,6 +285,7 @@ void GUIMyFrame1::InsertionSort() {
 		}
 		_tab[i].setColorWhite();
 	}
+	ControlsOnStop();
 }
 
 void GUIMyFrame1::SelectionSort() {
@@ -296,6 +316,7 @@ void GUIMyFrame1::SelectionSort() {
 		min->setColorWhite();
 		DoDelay();
 	}
+	ControlsOnStop();
 }
 
 // additional method to merge two sorted arrays into one 
@@ -398,10 +419,8 @@ void GUIMyFrame1::MergeSort(int p, int r) { // p, r - beginning, end index
 	MergeSort(q+1, r);
 	// merge sorted parts
 	Merge(p, q, r);
-}
-
-void GUIMyFrame1::InPlaceMergeSort() {
-	std::stop_token st = _bgThread.get_stop_token();
+	if(p == 0 && r == _tab.size()-1)
+		ControlsOnStop();
 }
 
 int GUIMyFrame1::parentNode(int i) {
@@ -493,6 +512,7 @@ void GUIMyFrame1::HeapSort() {
 		_tab[0].setColorWhite();
 		siftDown(0, end);
 	}
+	ControlsOnStop();
 }
 
 void GUIMyFrame1::StdSort() {
@@ -510,6 +530,7 @@ void GUIMyFrame1::StdSort() {
 				return o1 < o2;
 			}
 			});
+		ControlsOnStop();
 	}
 	catch (std::exception e) {}
 }
@@ -527,6 +548,9 @@ void GUIMyFrame1::QuickSortLomuto(int lo, int hi) {
 	if (!st.stop_requested()) {
 		QuickSortLomuto(lo, p - 1); // Left side of pivot
 		QuickSortLomuto(p + 1, hi); // Right side of pivot
+
+		if (lo == 0 && hi == _tab.size() - 1)
+			ControlsOnStop();
 	}
 }
 
@@ -591,6 +615,9 @@ void GUIMyFrame1::QuickSortHoare(int lo, int hi) {
 		int p = partitionHoare(lo, hi);
 		QuickSortHoare(lo, p); // Note: the pivot is now included
 		QuickSortHoare(p + 1, hi);
+
+		if (lo == 0 && hi == _tab.size() - 1)
+			ControlsOnStop();
 	}
 }
 
@@ -655,10 +682,6 @@ int GUIMyFrame1::partitionHoare(int lo, int hi) {
 	}
 }
 
-void GUIMyFrame1::TimSort() {
-	std::stop_token st = _bgThread.get_stop_token();
-}
-
 void GUIMyFrame1::ShellSort() {
 	std::stop_token st = _bgThread.get_stop_token();
 	// https://en.wikipedia.org/wiki/Shellsort
@@ -688,6 +711,7 @@ void GUIMyFrame1::ShellSort() {
 			_tab[i].setColorWhite();
 		}
 	}
+	ControlsOnStop();
 }
 
 void GUIMyFrame1::CocktailShakerSort() {
@@ -724,15 +748,7 @@ void GUIMyFrame1::CocktailShakerSort() {
 		}
 		bottom++;
 	}
-
-}
-
-void GUIMyFrame1::CombSort() {
-	std::stop_token st = _bgThread.get_stop_token();
-}
-
-void GUIMyFrame1::GnomeSort() {
-	std::stop_token st = _bgThread.get_stop_token();
+	ControlsOnStop();
 }
 
 void GUIMyFrame1::OddEvenSort() {
@@ -772,12 +788,8 @@ void GUIMyFrame1::OddEvenSort() {
 			_tab[i + 1].setColorWhite();
 		}
 	}
+	ControlsOnStop();
 }
-
-void GUIMyFrame1::StrandSort() {
-	std::stop_token st = _bgThread.get_stop_token();
-}
-
 
 void GUIMyFrame1::m_sliderDelayOnScroll(wxScrollEvent& event) {
 	// calculations from:

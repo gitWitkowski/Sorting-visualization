@@ -54,6 +54,8 @@ public:
 	void DisableButtons();
 	void EnableButtons();
 	void DoDelay();
+	void ControlsOnStart();
+	void ControlsOnStop();
 
 	/// sorting methods
 	void BubbleSort();
@@ -61,7 +63,6 @@ public:
 	void SelectionSort();
 	void Merge(int, int, int);
 	void MergeSort(int, int);
-	void InPlaceMergeSort();
 	void HeapSort();
 	void heapify();
 	void siftDown(int, int);
@@ -73,13 +74,9 @@ public:
 	void QuickSortLomuto(int, int);
 	int partitionHoare(int, int);
 	int partitionLomuto(int, int);
-	void TimSort();
 	void ShellSort();
 	void CocktailShakerSort();
-	void CombSort();
-	void GnomeSort();
 	void OddEvenSort();
-	void StrandSort();
 
 	std::vector<SortingElement> _tab;
 	int _maxElemValue;
