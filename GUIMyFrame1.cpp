@@ -2,7 +2,7 @@
 
 GUIMyFrame1::GUIMyFrame1(wxWindow* parent)
 	:
-	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{20}
+	MyFrame1(parent), _maxElemValue{ m_slider_Num_of_Elem->GetValue()}, _delayTimeInUs{10000}
 {
 	m_ComparisonsNum->SetLabel(std::to_string(SortingElement::comparisonNum));
 	UpdateTab();

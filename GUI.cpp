@@ -57,7 +57,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticText2->Wrap( -1 );
 	bSizer5->Add( m_staticText2, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 25, 25, 600, wxDefaultPosition, wxSize( 130,-1 ), wxSL_VALUE_LABEL );
+	m_slider_Num_of_Elem = new wxSlider( this, wxID_ANY, 25, 25, 500, wxDefaultPosition, wxSize( 130,-1 ), wxSL_VALUE_LABEL );
 	bSizer5->Add( m_slider_Num_of_Elem, 0, wxALIGN_CENTER|wxALL, 5 );
 
 	wxString m_shuffleTypeChoices[] = { wxT("RANDOM SHUFFLE"), wxT("NEARLY SORTED"), wxT("MANY DUPLICATES"), wxT("DESCENDING ORDER"), wxT("ALREADY SORTED") };
@@ -83,7 +83,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_staticTextDelay->Wrap( -1 );
 	bSizer5->Add( m_staticTextDelay, 0, wxALIGN_CENTER|wxALL, 5 );
 
-	m_sliderDelay = new wxSlider( this, wxID_ANY, 1, 0, 50, wxDefaultPosition, wxSize( 130,-1 ), wxSL_HORIZONTAL );
+	m_sliderDelay = new wxSlider( this, wxID_ANY, 25, 0, 50, wxDefaultPosition, wxSize( 130,-1 ), wxSL_HORIZONTAL );
 	bSizer5->Add( m_sliderDelay, 0, wxALIGN_CENTER|wxALL, 5 );
 
 
