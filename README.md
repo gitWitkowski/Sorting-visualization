@@ -36,8 +36,18 @@ This project was built in my free time to practise programming skills and refres
 
 ### Application demo
 
+GUI of the application:
+
 ![alt text](https://github.com/gitWitkowski/Sorting-visualization/blob/main/Demo/start_gui.jpg)
 
+Merge sort performed on the randomly shuffled array:
+
+https://github.com/gitWitkowski/Sorting-visualization/assets/73957636/104cb693-88e1-4610-b21f-7c9c14daab5a
+
+Shellsort performed on the array with elements in descending order:
+
+https://github.com/gitWitkowski/Sorting-visualization/assets/73957636/ba2b79bf-a86a-417d-94c9-9395f1b62c93
+ 
 ### Usage
 
 ### How to run the project
