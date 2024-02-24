@@ -1,7 +1,7 @@
 
 # Sorting algorithms visualization
 
-## Simple project that allows user to visualize different sorting algorithms with given parameters such as number of elements and delay.
+Simple project that allows user to visualize different sorting algorithms with given parameters such as number of elements and delay.
 
 ### Goal of the project
 This project was built in my free time to practise programming skills and refresh some of my knowledge about sorting algorithms, as well as to continue writing programs in C++ myself, after finishing a C++ course at university. Additionally, I learned the basics of multithreading in C++ and got acquainted with [`std::jthread`](https://en.cppreference.com/w/cpp/thread/jthread) which is part of C++20.
@@ -12,8 +12,32 @@ This project was built in my free time to practise programming skills and refres
 - [wxFormBuilder](https://sourceforge.net/projects/wxformbuilder/)
 - Microsoft Visual Studio
 
-### Short project description
+### Features
+- 11 sorting algorithms to choose from
+    - [Bubble sort](https://en.wikipedia.org/wiki/Bubble_sort) 
+    - [Insertion sort](https://en.wikipedia.org/wiki/Insertion_sort)
+    - [Selection sort](https://en.wikipedia.org/wiki/Selection_sort)
+    - [Merge sort](https://en.wikipedia.org/wiki/Merge_sort)
+    - [Heapsort](https://en.wikipedia.org/wiki/Heapsort)
+    - [std::sort](https://en.cppreference.com/w/cpp/algorithm/sort)
+    - [Quicksort Hoare partition scheme](https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme)
+    - [Quicksort Lomuto partition scheme](https://en.wikipedia.org/wiki/Quicksort#Lomuto_partition_scheme)
+    - [Shellsort](https://en.wikipedia.org/wiki/Shellsort)
+    - [Cocktail shaker sort](https://en.wikipedia.org/wiki/Cocktail_shaker_sort)
+    - [Odd–even sort](https://en.wikipedia.org/wiki/Odd%E2%80%93even_sort)
+- Adjustment of the number of elements (25-500)
+- 5 different elements shuffle types
+    - Random shuffle
+    - Nearly sorted
+    - Many duplicates
+    - Descending order
+    - Already sorted
+- Adjustment of the delay between sorting operations (0.1 - 1000 ms)
 
-
+### Application demo
 
 ![alt text](https://github.com/gitWitkowski/Sorting-visualization/blob/main/Demo/start_gui.jpg)
+
+### Usage
+
+### How to run the project
