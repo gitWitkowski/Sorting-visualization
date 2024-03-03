@@ -55,11 +55,22 @@ https://github.com/gitWitkowski/Sorting-visualization/assets/73957636/104cb693-8
 Shellsort performed on the array with elements in descending order:
 
 https://github.com/gitWitkowski/Sorting-visualization/assets/73957636/ba2b79bf-a86a-417d-94c9-9395f1b62c93
- 
+
 -----
 
 ### Usage
 
+Select the sorting type from the drop down list and set the number of elements using slider. Modify an array with the chosen shuffle type and start the animation. You can adjust the sorting speed while animation is taking place, as well as stop it before it finishes.
+
 -----
 
 ### How to run the project
+
+1. Clone git repository:
+```
+git clone https://github.com/gitWitkowski/Sorting-visualization.git
+```
+2. [Download](https://www.wxwidgets.org/downloads/) and [build](https://wiki.wxwidgets.org/Install) wxWidgets
+3. Copy wxWidgets directory (named `wxWidgets`) into project directory
+4. Open project file (`.sln`) using Visual Studio
+5. Compile and run the project
